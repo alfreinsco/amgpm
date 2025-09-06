@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
 // Anggota Routes (Admin Only)
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('anggota', AnggotaController::class);
+    Route::patch('/anggota/{anggotum}/reset-password', [AnggotaController::class, 'resetPassword'])->name('anggota.reset-password');
 });
 
 // Ulang Tahun Routes (Authenticated Users)

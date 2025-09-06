@@ -109,7 +109,7 @@ class IbadahController extends Controller
 
         $ibadah->update($validated);
 
-        return redirect()->route('ibadah.index')
+        return redirect()->route('ibadah.show', $ibadah->id)
                         ->with('success', 'Jadwal ibadah berhasil diperbarui!');
     }
 

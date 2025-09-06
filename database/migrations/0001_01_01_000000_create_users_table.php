@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('tempat_lahir');
-            $table->string('tanggal_lahir');
+            $table->date('tanggal_lahir');
             $table->enum('golongan_darah', ['A', 'B', 'AB', 'O']);
             $table->string('whatsapp')->nullable()->unique();
             $table->timestamp('whatsapp_verified_at')->nullable();

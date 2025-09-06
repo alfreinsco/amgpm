@@ -145,6 +145,18 @@
                                                title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            <form action="{{ route('anggota.reset-password', $item) }}" 
+                                                  method="POST" 
+                                                  class="inline"
+                                                  onsubmit="return confirm('Apakah Anda yakin ingin mereset password ke format default (tanggal lahir)?')">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" 
+                                                        class="btn btn-sm btn-ghost text-orange-600 hover:bg-orange-50"
+                                                        title="Reset Password">
+                                                    <i class="fas fa-key"></i>
+                                                </button>
+                                            </form>
                                             <form action="{{ route('anggota.destroy', $item) }}" 
                                                   method="POST" 
                                                   class="inline"

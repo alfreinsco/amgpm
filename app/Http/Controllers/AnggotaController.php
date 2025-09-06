@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class AnggotaController extends Controller
 {
@@ -15,7 +16,7 @@ class AnggotaController extends Controller
     public function index(Request $request)
     {
         $query = User::query();
-        
+
         // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
@@ -26,19 +27,19 @@ class AnggotaController extends Controller
                   ->orWhere('tempat_lahir', 'like', "%{$search}%");
             });
         }
-        
+
         // Filter by golongan darah
         if ($request->filled('golongan_darah')) {
             $query->where('golongan_darah', $request->golongan_darah);
         }
-        
+
         // Filter by admin status
         if ($request->filled('is_admin')) {
             $query->where('is_admin', $request->is_admin === '1');
         }
-        
+
         $anggota = $query->orderBy('nama')->paginate(10)->withQueryString();
-        
+
         return view('anggota.index', compact('anggota'));
     }
 
@@ -57,22 +58,25 @@ class AnggotaController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:users,email',
-            'password' => 'required|string|min:8',
+            'email' => 'required|email|unique:users,email',
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'golongan_darah' => 'required|in:A,B,AB,O',
-            'whatsapp' => 'nullable|string|unique:users,whatsapp',
+            'whatsapp' => 'required|string|unique:users,whatsapp',
             'is_admin' => 'boolean'
         ]);
-        
-        $validated['password'] = Hash::make($validated['password']);
+
+        // Generate password from birth date (YYYYMMDD format)
+        $birthDate = Carbon::parse($validated['tanggal_lahir']);
+        $defaultPassword = $birthDate->format('Ymd');
+        $validated['password'] = Hash::make($defaultPassword);
+
         $validated['is_admin'] = $request->has('is_admin');
-        
-        User::create($validated);
-        
-        return redirect()->route('anggota.index')
-                        ->with('success', 'Data anggota berhasil ditambahkan.');
+
+        $anggotum = User::create($validated);
+
+        return redirect()->route('anggota.show', $anggotum->id)
+                        ->with('success', 'Data anggota berhasil ditambahkan. Password default: ' . $defaultPassword);
     }
 
     /**
@@ -98,27 +102,42 @@ class AnggotaController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => ['nullable', 'email', Rule::unique('users')->ignore($anggotum->id)],
-            'password' => 'nullable|string|min:8',
+            'email' => ['required', 'email', Rule::unique('users')->ignore($anggotum->id)],
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
             'golongan_darah' => 'required|in:A,B,AB,O',
-            'whatsapp' => ['nullable', 'string', Rule::unique('users')->ignore($anggotum->id)],
+            'whatsapp' => ['required', 'string', Rule::unique('users')->ignore($anggotum->id)],
             'is_admin' => 'boolean'
         ]);
-        
-        if ($request->filled('password')) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
-        
+
         $validated['is_admin'] = $request->has('is_admin');
-        
+
         $anggotum->update($validated);
-        
-        return redirect()->route('anggota.index')
+
+        return redirect()->route('anggota.show', $anggotum->id)
                         ->with('success', 'Data anggota berhasil diperbarui.');
+    }
+
+    /**
+     * Reset password to default format (birth date)
+     */
+    public function resetPassword(User $anggotum)
+    {
+        if (!$anggotum->tanggal_lahir) {
+            return redirect()->back()
+                            ->with('error', 'Tidak dapat mereset password. Tanggal lahir tidak tersedia.');
+        }
+
+        // Generate password from birth date (YYYYMMDD format)
+        $birthDate = Carbon::parse($anggotum->tanggal_lahir);
+        $defaultPassword = $birthDate->format('Ymd');
+
+        $anggotum->update([
+            'password' => Hash::make($defaultPassword)
+        ]);
+
+        return redirect()->back()
+                        ->with('success', 'Password berhasil direset ke format default: ' . $defaultPassword);
     }
 
     /**
@@ -127,7 +146,7 @@ class AnggotaController extends Controller
     public function destroy(User $anggotum)
     {
         $anggotum->delete();
-        
+
         return redirect()->route('anggota.index')
                         ->with('success', 'Data anggota berhasil dihapus.');
     }

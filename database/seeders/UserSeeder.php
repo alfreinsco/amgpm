@@ -37,6 +37,6 @@ class UserSeeder extends Seeder
         ]);
 
         // Create additional regular users
-        \App\Models\User::factory(8)->create(['is_admin' => false]);
+        \App\Models\User::factory(200)->create(['is_admin' => false]);
     }
 }

@@ -17,6 +17,15 @@
             </a>
         </div>
 
+        @if (session('success'))
+            <div role="alert" class="alert alert-success mb-6 rounded-lg border-l-4 border-green-500 bg-green-50 text-green-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
         <div class="bg-white p-8 rounded-lg shadow-xl border border-gray-100">
             <!-- Header Profile -->
             <div class="flex items-center mb-8 pb-6 border-b border-gray-200">
@@ -52,7 +61,7 @@
                         <i class="fas fa-address-book mr-2 text-blue-600"></i>
                         Informasi Kontak
                     </h3>
-                    
+
                     <div class="space-y-4">
                         <div class="flex items-start">
                             <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3 mt-1">
@@ -72,8 +81,8 @@
                                 <p class="text-sm font-medium text-gray-500">WhatsApp</p>
                                 <p class="text-gray-900">{{ $anggotum->whatsapp ?: 'Tidak ada' }}</p>
                                 @if($anggotum->whatsapp)
-                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $anggotum->whatsapp) }}" 
-                                       target="_blank" 
+                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $anggotum->whatsapp) }}"
+                                       target="_blank"
                                        class="text-green-600 hover:text-green-700 text-sm">
                                         <i class="fas fa-external-link-alt mr-1"></i>
                                         Kirim Pesan
@@ -90,7 +99,7 @@
                         <i class="fas fa-user-circle mr-2 text-purple-600"></i>
                         Informasi Personal
                     </h3>
-                    
+
                     <div class="space-y-4">
                         <div class="flex items-start">
                             <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3 mt-1">
@@ -162,12 +171,23 @@
                     <i class="fas fa-edit mr-2"></i>
                     Edit Data
                 </a>
+                <form action="{{ route('anggota.reset-password', $anggotum) }}"
+                      method="POST"
+                      class="flex-1 sm:flex-none"
+                      onsubmit="return confirm('Reset password ke tanggal lahir ({{ \Carbon\Carbon::parse($anggotum->tanggal_lahir)->format('dmY') }})? Password lama akan hilang.')">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-warning w-full" title="Reset password ke format tanggal lahir">
+                        <i class="fas fa-key mr-2"></i>
+                        Reset Password
+                    </button>
+                </form>
                 <a href="{{ route('anggota.index') }}" class="btn btn-outline flex-1 sm:flex-none">
                     <i class="fas fa-list mr-2"></i>
                     Daftar Anggota
                 </a>
-                <form action="{{ route('anggota.destroy', $anggotum) }}" 
-                      method="POST" 
+                <form action="{{ route('anggota.destroy', $anggotum) }}"
+                      method="POST"
                       class="flex-1 sm:flex-none"
                       onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini?')">
                     @csrf
