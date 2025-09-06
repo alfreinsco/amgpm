@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IbadahController;
+use App\Http\Controllers\AnggotaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,4 +41,9 @@ Route::middleware('auth')->group(function () {
         Route::put('/ibadah/{ibadah}', [IbadahController::class, 'update'])->name('ibadah.update');
         Route::delete('/ibadah/{ibadah}', [IbadahController::class, 'destroy'])->name('ibadah.destroy');
     });
+});
+
+// Anggota Routes (Admin Only)
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::resource('anggota', AnggotaController::class);
 });
