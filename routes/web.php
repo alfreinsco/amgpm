@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IbadahController;
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\UlangTahunController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -46,4 +47,9 @@ Route::middleware('auth')->group(function () {
 // Anggota Routes (Admin Only)
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('anggota', AnggotaController::class);
+});
+
+// Ulang Tahun Routes (Authenticated Users)
+Route::middleware('auth')->group(function () {
+    Route::get('/ulang-tahun', [UlangTahunController::class, 'index'])->name('ulang-tahun.index');
 });
