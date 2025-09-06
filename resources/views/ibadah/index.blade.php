@@ -232,40 +232,8 @@
                 @endforeach
             </div>
 
-            <div class="mt-8 flex justify-center">
-                <div class="join">
-                    {{-- Previous Page Link --}}
-                    @if ($ibadah->onFirstPage())
-                        <button class="join-item btn btn-disabled">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                    @else
-                        <a href="{{ $ibadah->previousPageUrl() }}" class="join-item btn btn-outline">
-                            <i class="fas fa-chevron-left"></i>
-                        </a>
-                    @endif
-
-                    {{-- Pagination Elements --}}
-                    @foreach ($ibadah->getUrlRange(1, $ibadah->lastPage()) as $page => $url)
-                        @if ($page == $ibadah->currentPage())
-                            <button class="join-item btn btn-active">{{ $page }}</button>
-                        @else
-                            <a href="{{ $url }}" class="join-item btn btn-outline">{{ $page }}</a>
-                        @endif
-                    @endforeach
-
-                    {{-- Next Page Link --}}
-                    @if ($ibadah->hasMorePages())
-                        <a href="{{ $ibadah->nextPageUrl() }}" class="join-item btn btn-outline">
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    @else
-                        <button class="join-item btn btn-disabled">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    @endif
-                </div>
-            </div>
+            <!-- Pagination Component -->
+            <x-pagination :paginator="$ibadah" label="jadwal ibadah" />
         @else
             <div class="bg-white p-12 rounded-lg shadow-xl text-center border border-gray-100">
                 <div class="inline-block p-4 bg-gray-100 rounded-full mb-4">

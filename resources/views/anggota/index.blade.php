@@ -36,14 +36,14 @@
                             <i class="fas fa-search mr-1"></i>
                             Cari Anggota
                         </label>
-                        <input type="text" 
-                               id="search" 
-                               name="search" 
+                        <input type="text"
+                               id="search"
+                               name="search"
                                value="{{ request('search') }}"
                                placeholder="Cari berdasarkan nama, email, whatsapp, atau tempat lahir..."
                                class="input input-bordered w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    
+
                     <!-- Filter Options -->
                     <div class="flex flex-col sm:flex-row gap-4">
                         <div>
@@ -51,8 +51,8 @@
                                 <i class="fas fa-tint mr-1"></i>
                                 Golongan Darah
                             </label>
-                            <select id="golongan_darah" 
-                                    name="golongan_darah" 
+                            <select id="golongan_darah"
+                                    name="golongan_darah"
                                     class="select select-bordered focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">Semua</option>
                                 <option value="A" {{ request('golongan_darah') === 'A' ? 'selected' : '' }}>A</option>
@@ -61,14 +61,14 @@
                                 <option value="O" {{ request('golongan_darah') === 'O' ? 'selected' : '' }}>O</option>
                             </select>
                         </div>
-                        
+
                         <div>
                             <label for="is_admin" class="block text-sm font-medium text-gray-700 mb-2">
                                 <i class="fas fa-user-shield mr-1"></i>
                                 Status Admin
                             </label>
-                            <select id="is_admin" 
-                                    name="is_admin" 
+                            <select id="is_admin"
+                                    name="is_admin"
                                     class="select select-bordered focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">Semua</option>
                                 <option value="1" {{ request('is_admin') === '1' ? 'selected' : '' }}>Admin</option>
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Action Buttons -->
                 <div class="flex flex-wrap gap-2 pt-2">
                     <button type="submit" class="btn btn-primary">
@@ -135,35 +135,35 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="flex justify-center gap-1">
-                                            <a href="{{ route('anggota.show', $item) }}" 
+                                            <a href="{{ route('anggota.show', $item) }}"
                                                class="btn btn-sm btn-ghost text-blue-600 hover:bg-blue-50"
                                                title="Detail">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('anggota.edit', $item) }}" 
+                                            <a href="{{ route('anggota.edit', $item) }}"
                                                class="btn btn-sm btn-ghost text-yellow-600 hover:bg-yellow-50"
                                                title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('anggota.reset-password', $item) }}" 
-                                                  method="POST" 
+                                            <form action="{{ route('anggota.reset-password', $item) }}"
+                                                  method="POST"
                                                   class="inline"
                                                   onsubmit="return confirm('Apakah Anda yakin ingin mereset password ke format default (tanggal lahir)?')">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" 
+                                                <button type="submit"
                                                         class="btn btn-sm btn-ghost text-orange-600 hover:bg-orange-50"
                                                         title="Reset Password">
                                                     <i class="fas fa-key"></i>
                                                 </button>
                                             </form>
-                                            <form action="{{ route('anggota.destroy', $item) }}" 
-                                                  method="POST" 
+                                            <form action="{{ route('anggota.destroy', $item) }}"
+                                                  method="POST"
                                                   class="inline"
                                                   onsubmit="return confirm('Apakah Anda yakin ingin menghapus data anggota ini?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" 
+                                                <button type="submit"
                                                         class="btn btn-sm btn-ghost text-red-600 hover:bg-red-50"
                                                         title="Hapus">
                                                     <i class="fas fa-trash"></i>
@@ -178,41 +178,8 @@
                 </div>
             </div>
 
-            <!-- Pagination -->
-            <div class="mt-8 flex justify-center">
-                <div class="join">
-                    {{-- Previous Page Link --}}
-                    @if ($anggota->onFirstPage())
-                        <button class="join-item btn btn-disabled">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                    @else
-                        <a href="{{ $anggota->previousPageUrl() }}" class="join-item btn btn-outline">
-                            <i class="fas fa-chevron-left"></i>
-                        </a>
-                    @endif
-
-                    {{-- Pagination Elements --}}
-                    @foreach ($anggota->getUrlRange(1, $anggota->lastPage()) as $page => $url)
-                        @if ($page == $anggota->currentPage())
-                            <button class="join-item btn btn-active">{{ $page }}</button>
-                        @else
-                            <a href="{{ $url }}" class="join-item btn btn-outline">{{ $page }}</a>
-                        @endif
-                    @endforeach
-
-                    {{-- Next Page Link --}}
-                    @if ($anggota->hasMorePages())
-                        <a href="{{ $anggota->nextPageUrl() }}" class="join-item btn btn-outline">
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    @else
-                        <button class="join-item btn btn-disabled">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    @endif
-                </div>
-            </div>
+            <!-- Pagination Component -->
+            <x-pagination :paginator="$anggota" label="anggota" />
         @else
             <div class="bg-white p-12 rounded-lg shadow-xl text-center border border-gray-100">
                 <div class="inline-block p-4 bg-gray-100 rounded-full mb-4">
