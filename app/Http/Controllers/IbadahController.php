@@ -69,9 +69,9 @@ class IbadahController extends Controller
 
         $validated['user_id'] = Auth::id();
 
-        Ibadah::create($validated);
+        $ibadah = Ibadah::create($validated);
 
-        return redirect()->route('ibadah.index')
+        return redirect()->route('ibadah.show', $ibadah->id)
                         ->with('success', 'Jadwal ibadah berhasil ditambahkan!');
     }
 

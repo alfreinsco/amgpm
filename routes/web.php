@@ -29,18 +29,18 @@ Route::middleware('auth')->group(function () {
 
 // Ibadah Routes
 Route::middleware('auth')->group(function () {
-    // Public routes (index, show)
-    Route::get('/ibadah', [IbadahController::class, 'index'])->name('ibadah.index');
-    Route::get('/ibadah/{ibadah}', [IbadahController::class, 'show'])->name('ibadah.show');
-    
     // Admin only routes
     Route::middleware('admin')->group(function () {
         Route::get('/ibadah/create', [IbadahController::class, 'create'])->name('ibadah.create');
-        Route::post('/ibadah', [IbadahController::class, 'store'])->name('ibadah.store');
+        Route::post('/ibadah', action: [IbadahController::class, 'store'])->name('ibadah.store');
         Route::get('/ibadah/{ibadah}/edit', [IbadahController::class, 'edit'])->name('ibadah.edit');
         Route::put('/ibadah/{ibadah}', [IbadahController::class, 'update'])->name('ibadah.update');
         Route::delete('/ibadah/{ibadah}', [IbadahController::class, 'destroy'])->name('ibadah.destroy');
     });
+
+    // Public routes (index, show)
+    Route::get('/ibadah', [IbadahController::class, 'index'])->name('ibadah.index');
+    Route::get('/ibadah/{ibadah}', [IbadahController::class, 'show'])->name('ibadah.show');
 });
 
 // Anggota Routes (Admin Only)
