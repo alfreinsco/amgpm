@@ -33,6 +33,7 @@ class UserFactory extends Factory
             'golongan_darah' => fake()->randomElement(['A', 'B', 'AB', 'O']),
             'whatsapp' => fake()->unique()->phoneNumber(),
             'whatsapp_verified_at' => now(),
+            'is_admin' => false,
             'remember_token' => Str::random(10),
             'created_at' => now(),
             'updated_at' => now(),

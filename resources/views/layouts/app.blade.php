@@ -14,10 +14,10 @@
 
     @stack('styles')
 </head>
-<body class="@yield('body-class', 'bg-base-100 min-h-screen')">
+<body class="@yield('body-class', 'bg-base-100 min-h-screen bg-gray-50 pt-16')">
     <div id="app">
         @auth
-            <div class="navbar bg-base-100 shadow-lg">
+            <div class="navbar bg-base-100 shadow-lg fixed top-0 left-0 right-0 z-50">
                 <div class="navbar-start">
                     <div class="dropdown">
                         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -54,6 +54,7 @@
                         <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                             <li><a class="justify-between">{{ Auth::user()->nama }}</a></li>
                             <li><a href="{{ route('dashboard') }}"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a></li>
+                            <li><a href="{{ route('ibadah.index') }}"><i class="fas fa-church mr-2"></i>Jadwal Ibadah</a></li>
                             <li><a href="{{ route('profile.show') }}"><i class="fas fa-user mr-2"></i>Profil Saya</a></li>
                             <li class="divider"></li>
                             <li>

@@ -3,7 +3,7 @@
 @section('title', 'Beranda - ' . config('app.name', 'Laravel'))
 
 @section('content')
-<div class="py-12 bg-gray-50 min-h-screen">
+<div class="py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="bg-white p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-100 mb-8 flex flex-col md:flex-row items-center">

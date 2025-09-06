@@ -22,7 +22,22 @@ return new class extends Migration
             $table->enum('golongan_darah', ['A', 'B', 'AB', 'O']);
             $table->string('whatsapp')->nullable()->unique();
             $table->timestamp('whatsapp_verified_at')->nullable();
+            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('ibadah', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama');
+            $table->date('tanggal');
+            $table->time('waktu');
+            $table->string('lokasi');
+            $table->string('pemimpin');
+            $table->string('pemandu')->nullable();
+            $table->string('tema')->nullable();
+            $table->string('catatan')->nullable();
+            $table->string('user_id')->nullable();
             $table->timestamps();
         });
 
