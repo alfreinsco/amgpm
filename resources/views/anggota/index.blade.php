@@ -102,8 +102,8 @@
                                 <th class="text-left font-semibold text-gray-700">Nama</th>
                                 <th class="text-left font-semibold text-gray-700">Email</th>
                                 <th class="text-left font-semibold text-gray-700">WhatsApp</th>
-                                <th class="text-left font-semibold text-gray-700">Tempat Lahir</th>
-                                <th class="text-left font-semibold text-gray-700">Tanggal Lahir</th>
+                                <th class="text-left font-semibold text-gray-700">Tempat, Tanggal Lahir</th>
+                                <th class="text-left font-semibold text-gray-700">Jenis Kelamin</th>
                                 <th class="text-left font-semibold text-gray-700">Gol. Darah</th>
                                 <th class="text-left font-semibold text-gray-700">Status</th>
                                 <th class="text-center font-semibold text-gray-700">Aksi</th>
@@ -115,8 +115,8 @@
                                     <td class="font-medium text-gray-900">{{ $item->nama }}</td>
                                     <td class="text-gray-600">{{ $item->email ?? '-' }}</td>
                                     <td class="text-gray-600">{{ $item->whatsapp ?? '-' }}</td>
-                                    <td class="text-gray-600">{{ $item->tempat_lahir }}</td>
-                                    <td class="text-gray-600">{{ \Carbon\Carbon::parse($item->tanggal_lahir)->format('d/m/Y') }}</td>
+                                    <td class="text-gray-600">{{ $item->tempat_lahir }}, {{ \Carbon\Carbon::parse($item->tanggal_lahir)->format('d-m-Y') }}</td>
+                                    <td class="text-gray-600">{{ $item->jk }}</td>
                                     <td>
                                         <span class="badge badge-outline badge-sm">{{ $item->golongan_darah }}</span>
                                     </td>

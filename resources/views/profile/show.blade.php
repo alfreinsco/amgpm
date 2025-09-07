@@ -149,6 +149,16 @@
                             </div>
                             <h3 class="text-lg font-bold text-gray-800">Kesehatan</h3>
                         </div>
+                        <div class="space-y-4 mb-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-gray-600">Jenis Kelamin</span>
+                                @if($user->jenis_kelamin)
+                                    <span class="text-sm font-semibold text-orange-600">{{ $user->jk }}</span>
+                                @else
+                                    <span class="text-sm text-gray-400">Belum diisi</span>
+                                @endif
+                            </div>
+                        </div>
                         <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <span class="text-sm font-medium text-gray-600">Golongan Darah</span>

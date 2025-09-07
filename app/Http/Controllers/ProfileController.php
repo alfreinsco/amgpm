@@ -41,6 +41,7 @@ class ProfileController extends Controller
             'whatsapp' => ['nullable', 'string', 'max:20'],
             'tempat_lahir' => ['nullable', 'string', 'max:255'],
             'tanggal_lahir' => ['nullable', 'date'],
+            'jenis_kelamin' => ['nullable', 'string', 'max:5'],
             'golongan_darah' => ['nullable', 'string', 'max:5'],
             'current_password' => ['nullable', 'required_with:password'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
@@ -63,6 +64,7 @@ class ProfileController extends Controller
             'whatsapp' => $validated['whatsapp'],
             'tempat_lahir' => $validated['tempat_lahir'],
             'tanggal_lahir' => $validated['tanggal_lahir'],
+            'jenis_kelamin' => $validated['jenis_kelamin'],
             'golongan_darah' => $validated['golongan_darah'],
         ];
 

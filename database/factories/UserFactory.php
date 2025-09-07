@@ -30,6 +30,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'tempat_lahir' => fake()->city(),
             'tanggal_lahir' => fake()->date(),
+            'jenis_kelamin' => fake()->randomElement(['L', 'P']),
             'golongan_darah' => fake()->randomElement(['A', 'B', 'AB', 'O']),
             'whatsapp' => '62' . substr(fake()->unique()->numerify('8##########'), 0),
             'whatsapp_verified_at' => now(),

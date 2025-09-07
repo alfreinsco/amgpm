@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'tempat_lahir',
         'tanggal_lahir',
+        'jenis_kelamin',
         'golongan_darah',
         'whatsapp',
     ];
@@ -50,5 +51,10 @@ class User extends Authenticatable
             'tanggal_lahir' => 'date',
             'password' => 'hashed',
         ];
+    }
+
+    public function getJkAttribute()
+    {
+        return $this->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan';
     }
 }

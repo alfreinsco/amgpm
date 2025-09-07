@@ -131,6 +131,16 @@
                         </div>
 
                         <div class="flex items-start">
+                            <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-3 mt-1">
+                                <i class="fas fa-venus-mars text-yellow-600 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Jenis Kelamin</p>
+                                <p class="text-gray-900">{{ $anggotum->jk ?: 'Tidak ada' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
                             <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3 mt-1">
                                 <i class="fas fa-tint text-red-600 text-sm"></i>
                             </div>

@@ -149,6 +149,30 @@
                     </div>
                 </div>
 
+                <!-- Jenis Kelamin -->
+                <div class="space-y-2">
+                    <label for="jenis_kelamin" class="flex items-center text-sm font-semibold text-gray-700">
+                        <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg w-8 h-8 flex items-center justify-center mr-3">
+                            <i class="fas fa-venus-mars text-white text-sm"></i>
+                        </div>
+                        Jenis Kelamin <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <select id="jenis_kelamin"
+                            name="jenis_kelamin"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 @error('jenis_kelamin') border-red-500 focus:ring-red-500 @enderror"
+                            required>
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="L" {{ old('jenis_kelamin', $anggotum->jenis_kelamin) === 'L' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="P" {{ old('jenis_kelamin', $anggotum->jenis_kelamin) === 'P' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                    @error('jenis_kelamin')
+                        <p class="text-red-500 text-sm mt-2 flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+
                 <!-- Golongan Darah -->
                 <div class="space-y-2">
                     <label for="golongan_darah" class="flex items-center text-sm font-semibold text-gray-700">

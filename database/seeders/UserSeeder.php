@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('admin@amgpm.test'),
             'tempat_lahir' => 'Jakarta',
             'tanggal_lahir' => '2001-01-14',
+            'jenis_kelamin' => 'L',
             'golongan_darah' => 'O',
             'whatsapp' => '62648254825482',
             'is_admin' => true
@@ -32,6 +33,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('20010114'),
             'tempat_lahir' => 'Wassu',
             'tanggal_lahir' => '2001-01-14',
+            'jenis_kelamin' => 'L',
             'golongan_darah' => 'O',
             'whatsapp' => '6281318812027',
             'is_admin' => true
@@ -44,6 +46,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('user@amgpm.test'),
             'tempat_lahir' => 'Jakarta',
             'tanggal_lahir' => '2001-01-14',
+            'jenis_kelamin' => 'L',
             'golongan_darah' => 'O',
             'whatsapp' => '6281248808575',
             'is_admin' => false
@@ -56,6 +59,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('20010206'),
             'tempat_lahir' => 'Ambon',
             'tanggal_lahir' => '2001-02-06',
+            'jenis_kelamin' => 'L',
             'golongan_darah' => 'O',
             'whatsapp' => '6282198210191',
             'is_admin' => false

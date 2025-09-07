@@ -106,6 +106,21 @@
                         </div>
 
                         <div>
+                            <label for="jenis_kelamin" class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-venus-mars text-pink-500 mr-2"></i>
+                                Jenis Kelamin
+                            </label>
+                            <select id="jenis_kelamin" name="jenis_kelamin" class="select select-bordered w-full rounded-xl bg-white border-2 border-gray-200  focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200 @error('jenis_kelamin') border-red-500 @enderror">
+                                <option value="" disabled selected class="text-gray-400">Pilih Jenis Kelamin</option>
+                                <option value="L" {{ old('jenis_kelamin', $user->jenis_kelamin) == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                <option value="P" {{ old('jenis_kelamin', $user->jenis_kelamin) == 'P' ? 'selected' : '' }}>Perempuan</option>
+                            </select>
+                            @error('jenis_kelamin')
+                                <p class="mt-2 text-xs text-red-500 flex items-center"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
                             <label for="golongan_darah" class="flex items-center text-sm font-semibold text-gray-700 mb-2">
                                 <i class="fas fa-tint text-red-600 mr-2"></i>
                                 Golongan Darah

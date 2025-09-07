@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
         ]);
 
-        // Generate 10 jadwal ibadah random
-        Ibadah::factory(10)->create();
+        // Generate 300 jadwal ibadah random
+        Ibadah::factory(300)->create();
 
         // Generate ibadah minggu pagi
         Ibadah::factory()->sundayMorning()->create();

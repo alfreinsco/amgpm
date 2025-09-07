@@ -61,6 +61,7 @@ class AnggotaController extends Controller
             'email' => 'required|email|unique:users,email',
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|in:L,P',
             'golongan_darah' => 'required|in:A,B,AB,O',
             'whatsapp' => 'required|string|unique:users,whatsapp',
             'is_admin' => 'boolean'
@@ -108,6 +109,7 @@ class AnggotaController extends Controller
             'email' => ['required', 'email', Rule::unique('users')->ignore($anggotum->id)],
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|in:L,P',
             'golongan_darah' => 'required|in:A,B,AB,O',
             'whatsapp' => ['required', 'string', Rule::unique('users')->ignore($anggotum->id)],
             'is_admin' => 'boolean'
