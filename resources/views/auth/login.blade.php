@@ -129,8 +129,9 @@
                         value="{{ old('login') }}"
                         placeholder="admin@gereja.com atau 081234567890"
                         required
+                        autofocus
                     >
-                    <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content/50">
+                    <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content/50 z-10 pointer-events-none">
                         <i class="fas fa-user"></i>
                     </div>
                 </div>
@@ -161,10 +162,10 @@
                         placeholder="Masukkan password Anda"
                         required
                     >
-                    <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content/50">
+                    <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content/50 z-10 pointer-events-none">
                         <i class="fas fa-key"></i>
                     </div>
-                    <button type="button" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-base-content/50 hover:text-base-content transition-colors" onclick="togglePassword()">
+                    <button type="button" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-base-content/50 hover:text-base-content transition-colors z-10" onclick="togglePassword()">
                         <i class="fas fa-eye" id="toggleIcon"></i>
                     </button>
                 </div>
@@ -225,11 +226,25 @@
     // Add focus animations
     document.querySelectorAll('input').forEach(input => {
         input.addEventListener('focus', function() {
-            this.parentElement.classList.add('scale-105');
+            // Add glow effect to icons only
+            const iconContainers = this.parentElement.querySelectorAll('div i, button i');
+            iconContainers.forEach(icon => {
+                if (!icon.id || icon.id !== 'toggleIcon') {
+                    icon.classList.add('text-primary');
+                    icon.classList.remove('text-base-content/50');
+                }
+            });
         });
 
         input.addEventListener('blur', function() {
-            this.parentElement.classList.remove('scale-105');
+            // Remove glow effect from icons
+            const iconContainers = this.parentElement.querySelectorAll('div i, button i');
+            iconContainers.forEach(icon => {
+                if (!icon.id || icon.id !== 'toggleIcon') {
+                    icon.classList.remove('text-primary');
+                    icon.classList.add('text-base-content/50');
+                }
+            });
         });
     });
 </script>
