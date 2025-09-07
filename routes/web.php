@@ -76,6 +76,7 @@ Route::middleware('auth')->prefix('pengaturan')->group(function () {
             Route::post('send/message', [WhatsappController::class, 'sendMessage'])->name('whatsapp.api.send.message');
             Route::post('send/image', [WhatsappController::class, 'sendImage'])->name('whatsapp.api.send.image');
             Route::post('send/document', [WhatsappController::class, 'sendDocument'])->name('whatsapp.api.send.document');
+            Route::post('send/birthday-wishes', [WhatsappController::class, 'sendBirthdayWishes'])->name('whatsapp.api.send.birthday-wishes');
 
 
         });

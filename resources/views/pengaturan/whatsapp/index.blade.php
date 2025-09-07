@@ -346,6 +346,35 @@
             </div>
         </div>
 
+        <!-- Send Birthday Wishes (Only shown when connected) -->
+        <div id="sendBirthdaySection" class="bg-white rounded-xl shadow-sm border border-gray-200 hidden">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="p-2 bg-pink-100 rounded-lg">
+                        <i class="fas fa-birthday-cake text-pink-600"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900">Kirim Ucapan Ulang Tahun</h2>
+                        <p class="text-gray-600 text-sm">Kirim ucapan ulang tahun untuk anggota yang berulang tahun besok</p>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-start gap-3">
+                        <i class="fas fa-info-circle text-yellow-600 mt-0.5"></i>
+                        <div class="text-sm text-yellow-800">
+                            <p class="font-medium mb-1">Informasi:</p>
+                            <p>Tombol ini akan mencari anggota yang berulang tahun besok dan mengirim ucapan selamat beserta pemberitahuan kunjungan pengurus AMGPM secara otomatis.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="sendBirthdayBtn" onclick="sendBirthdayWishes()"
+                        class="w-full px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors duration-200 font-medium cursor-pointer">
+                    <i class="fas fa-birthday-cake mr-2"></i>Kirim Ucapan Ulang Tahun
+                </button>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -393,6 +422,7 @@
         const sendMessageSection = document.getElementById('sendMessageSection');
         const sendImageSection = document.getElementById('sendImageSection');
         const sendDocumentSection = document.getElementById('sendDocumentSection');
+        const sendBirthdaySection = document.getElementById('sendBirthdaySection');
 
         if (errorMessage) {
             if (statusEl) {
@@ -409,6 +439,7 @@
             if (sendMessageSection) sendMessageSection.classList.add('hidden');
             if (sendImageSection) sendImageSection.classList.add('hidden');
             if (sendDocumentSection) sendDocumentSection.classList.add('hidden');
+            if (sendBirthdaySection) sendBirthdaySection.classList.add('hidden');
         } else if (isConnected) {
             if (statusEl) {
                 statusEl.textContent = 'Terhubung';
@@ -424,6 +455,7 @@
             if (sendMessageSection) sendMessageSection.classList.remove('hidden');
             if (sendImageSection) sendImageSection.classList.remove('hidden');
             if (sendDocumentSection) sendDocumentSection.classList.remove('hidden');
+            if (sendBirthdaySection) sendBirthdaySection.classList.remove('hidden');
         } else {
             if (statusEl) {
                 statusEl.textContent = 'Tidak terhubung';
@@ -903,6 +935,73 @@
     }
 
 
+
+    // Send Birthday Wishes function
+    async function sendBirthdayWishes() {
+        const btn = document.getElementById('sendBirthdayBtn');
+        const originalText = btn.innerHTML;
+
+        try {
+            // Disable button and show loading
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
+
+            const response = await fetch('{{ route("whatsapp.api.send.birthday-wishes") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Show success message
+                showAlert('success', result.message || 'Ucapan ulang tahun berhasil dikirim!');
+            } else {
+                // Show error message
+                showAlert('error', result.message || 'Gagal mengirim ucapan ulang tahun');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('error', 'Terjadi kesalahan saat mengirim ucapan ulang tahun');
+        } finally {
+            // Re-enable button
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+
+    // Helper function to show alerts
+    function showAlert(type, message) {
+        // Create alert element
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${
+            type === 'success' ? 'bg-green-100 border border-green-400 text-green-700' : 'bg-red-100 border border-red-400 text-red-700'
+        }`;
+        alertDiv.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas ${
+                    type === 'success' ? 'fa-check-circle text-green-500' : 'fa-exclamation-circle text-red-500'
+                } mr-2"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+
+        // Add to page
+        document.body.appendChild(alertDiv);
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (alertDiv.parentElement) {
+                alertDiv.remove();
+            }
+        }, 5000);
+    }
 
     // Also initialize when jQuery is ready
     $(document).ready(function() {

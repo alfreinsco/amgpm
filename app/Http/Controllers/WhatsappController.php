@@ -7,6 +7,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\SendBirthdayWishes;
+use Carbon\Carbon;
 
 use App\Models\User;
 
@@ -377,5 +379,72 @@ class WhatsappController extends Controller
         }
     }
 
+    /**
+     * Send birthday wishes manually for members with birthday tomorrow
+     */
+    public function sendBirthdayWishes(Request $request): JsonResponse
+    {
+        try {
+             // Get tomorrow's date
+            $tomorrow = Carbon::tomorrow();
+            
+            // Find members with birthday tomorrow
+            $birthdayMembers = User::whereNotNull('tanggal_lahir')
+                ->whereNotNull('whatsapp')
+                ->whereRaw('MONTH(tanggal_lahir) = ? AND DAY(tanggal_lahir) = ?', [
+                    $tomorrow->month,
+                    $tomorrow->day
+                ])
+                ->get();
+            
+            if ($birthdayMembers->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak ada anggota yang berulang tahun besok',
+                    'data' => ['count' => 0]
+                ]);
+            }
+            
+            // Dispatch jobs for each birthday member
+            $dispatchedCount = 0;
+            foreach ($birthdayMembers as $member) {
+                SendBirthdayWishes::dispatch($member);
+                $dispatchedCount++;
+            }
+            
+            // Log the manual trigger
+            Log::info('Manual birthday wishes triggered', [
+                'triggered_by' => Auth::id(),
+                'members_count' => $dispatchedCount,
+                'tomorrow_date' => $tomorrow->format('Y-m-d')
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => "Berhasil mengirim ucapan ulang tahun untuk {$dispatchedCount} anggota",
+                'data' => [
+                    'count' => $dispatchedCount,
+                    'members' => $birthdayMembers->map(function($member) {
+                        return [
+                            'nama' => $member->nama,
+                            'whatsapp' => $member->whatsapp,
+                            'tanggal_lahir' => $member->tanggal_lahir->format('d-m-Y')
+                        ];
+                    })
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error in manual birthday wishes trigger', [
+                'error' => $e->getMessage(),
+                'triggered_by' => Auth::id()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
 }
