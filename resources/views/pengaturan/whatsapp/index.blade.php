@@ -221,7 +221,7 @@
                         <i class="fas fa-image text-green-600"></i>
                         <h2 class="text-xl font-semibold text-gray-900">Kirim Gambar</h2>
                     </div>
-                    <p class="text-gray-600 text-sm">Kirim gambar dengan caption melalui WhatsApp</p>
+                    <p class="text-gray-600 text-sm">Kirim gambar melalui WhatsApp</p>
                 </div>
                 <div class="p-6">
                     <form id="sendImageForm" class="space-y-4">
@@ -251,11 +251,11 @@
                             <p class="text-xs text-gray-500 mt-1">URL gambar yang dapat diakses publik</p>
                         </div>
 
-                        <!-- Caption Text -->
+                        <!-- Pesan Text -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Caption</label>
-                            <textarea id="imageCaption" required rows="3"
-                                      placeholder="Tulis caption untuk gambar..."
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pesan</label>
+                            <textarea id="imageText" required rows="3"
+                                      placeholder="Tulis pesan Anda di sini..."
                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"></textarea>
                         </div>
 
@@ -282,7 +282,7 @@
                         <i class="fas fa-file-alt text-purple-600"></i>
                         <h2 class="text-xl font-semibold text-gray-900">Kirim Dokumen</h2>
                     </div>
-                    <p class="text-gray-600 text-sm">Kirim dokumen dengan caption melalui WhatsApp</p>
+                    <p class="text-gray-600 text-sm">Kirim dokumen melalui WhatsApp</p>
                 </div>
                 <div class="p-6">
                     <form id="sendDocumentForm" class="space-y-4">
@@ -297,7 +297,7 @@
                         <!-- Phone Number -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Tujuan</label>
-                            <input type="tel" id="documentPhoneNumber" required
+                            <input type="tel" id="document_to" required
                                    placeholder="628123456789 (dengan kode negara)"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             <p class="text-xs text-gray-500 mt-1">Format: 62 untuk Indonesia, tanpa tanda +</p>
@@ -306,7 +306,7 @@
                         <!-- Document URL -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">URL Dokumen</label>
-                            <input type="url" id="documentUrl" required
+                            <input type="url" id="document_url" required
                                    placeholder="https://example.com/document.pdf"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             <p class="text-xs text-gray-500 mt-1">URL dokumen yang dapat diakses publik</p>
@@ -315,17 +315,17 @@
                         <!-- Document Name -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nama Dokumen</label>
-                            <input type="text" id="documentName" required
+                            <input type="text" id="document_name" required
                                    placeholder="document.pdf"
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             <p class="text-xs text-gray-500 mt-1">Nama file yang akan ditampilkan</p>
                         </div>
 
-                        <!-- Caption Text -->
+                        <!-- Pesan Text -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Caption</label>
-                            <textarea id="documentCaption" required rows="3"
-                                      placeholder="Tulis caption untuk dokumen..."
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pesan</label>
+                            <textarea id="documentText" required rows="3"
+                                      placeholder="Tulis pesan Anda di sini..."
                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"></textarea>
                         </div>
 
@@ -346,25 +346,7 @@
             </div>
         </div>
 
-        <!-- Message History (Only shown when connected) -->
-        <div id="messageHistorySection" class="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 hidden">
-            <div class="p-6 border-b border-gray-200">
-                <div class="flex items-center gap-3 mb-2">
-                    <i class="fas fa-history text-purple-600"></i>
-                    <h2 class="text-xl font-semibold text-gray-900">Riwayat Pesan</h2>
-                </div>
-                <p class="text-gray-600 text-sm">Log pesan yang telah dikirim</p>
-            </div>
-            <div class="p-6">
-                <div id="messageHistory" class="space-y-3">
-                    <div class="text-center py-8 text-gray-500">
-                        <i class="fas fa-inbox text-3xl mb-2 opacity-50"></i>
-                        <p>Belum ada riwayat pesan</p>
-                        <p class="text-sm">Pesan yang dikirim akan muncul di sini</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 
@@ -376,29 +358,31 @@
     // Check AMGPM session status
     async function checkAMGPMSessionStatus() {
         try {
-            // Check if amgpm session exists in session list
-            const sessionsResponse = await fetch(`${WA_GATEWAY_URL}/session`, {
-                method: 'GET'
+            // Check session status using Laravel API
+            const response = await fetch('{{ route("whatsapp.api.session.status") }}', {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
             });
 
-            if (sessionsResponse.ok) {
-                const result = await sessionsResponse.json();
-                const sessions = result.data || [];
+            if (response.ok) {
+                const result = await response.json();
 
-                if (sessions.includes('amgpm')) {
-                    // Session already exists and is connected
+                if (result.success && result.data && result.data.connected) {
+                    // Session is connected
                     updateSessionUI(true);
                     return;
                 }
 
-                // If session doesn't exist in list, session is not connected
+                // Session is not connected
                 updateSessionUI(false);
             } else {
                 updateSessionUI(false, 'Gagal memeriksa status');
             }
         } catch (error) {
             console.error('Error:', error);
-            updateSessionUI(false, 'Tidak dapat terhubung ke wa-gateway');
+            updateSessionUI(false, 'Tidak dapat terhubung ke server');
         }
     }
 
@@ -407,43 +391,52 @@
         const statusEl = document.getElementById('sessionStatus');
         const btnEl = document.getElementById('sessionActionBtn');
         const sendMessageSection = document.getElementById('sendMessageSection');
-        const messageHistorySection = document.getElementById('messageHistorySection');
+        const sendImageSection = document.getElementById('sendImageSection');
+        const sendDocumentSection = document.getElementById('sendDocumentSection');
 
         if (errorMessage) {
-            statusEl.textContent = errorMessage;
-            statusEl.className = 'text-sm text-red-500';
-            btnEl.textContent = 'Coba Lagi';
-            btnEl.className = 'px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500';
-            btnEl.disabled = false;
-            btnEl.onclick = checkAMGPMSessionStatus;
+            if (statusEl) {
+                statusEl.textContent = errorMessage;
+                statusEl.className = 'text-sm text-red-500';
+            }
+            if (btnEl) {
+                btnEl.textContent = 'Coba Lagi';
+                btnEl.className = 'px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500';
+                btnEl.disabled = false;
+                btnEl.onclick = checkAMGPMSessionStatus;
+            }
             // Hide message sections
-            sendMessageSection.classList.add('hidden');
-            document.getElementById('sendImageSection').classList.add('hidden');
-            document.getElementById('sendDocumentSection').classList.add('hidden');
-            messageHistorySection.classList.add('hidden');
+            if (sendMessageSection) sendMessageSection.classList.add('hidden');
+            if (sendImageSection) sendImageSection.classList.add('hidden');
+            if (sendDocumentSection) sendDocumentSection.classList.add('hidden');
         } else if (isConnected) {
-            statusEl.textContent = 'Terhubung';
-            statusEl.className = 'text-sm text-green-600';
-            btnEl.textContent = 'Putuskan';
-            btnEl.className = 'px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500';
-            btnEl.disabled = false;
-            btnEl.onclick = () => toggleSession(false);
+            if (statusEl) {
+                statusEl.textContent = 'Terhubung';
+                statusEl.className = 'text-sm text-green-600';
+            }
+            if (btnEl) {
+                btnEl.textContent = 'Putuskan';
+                btnEl.className = 'px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500';
+                btnEl.disabled = false;
+                btnEl.onclick = () => toggleSession(false);
+            }
             // Show message sections
-            sendMessageSection.classList.remove('hidden');
-            document.getElementById('sendImageSection').classList.remove('hidden');
-            document.getElementById('sendDocumentSection').classList.remove('hidden');
-            messageHistorySection.classList.remove('hidden');
-            // Note: refreshMessages() removed - use manual refresh button instead
+            if (sendMessageSection) sendMessageSection.classList.remove('hidden');
+            if (sendImageSection) sendImageSection.classList.remove('hidden');
+            if (sendDocumentSection) sendDocumentSection.classList.remove('hidden');
         } else {
-            statusEl.textContent = 'Tidak terhubung';
-            statusEl.className = 'text-sm text-gray-500';
-            btnEl.textContent = 'Hubungkan';
-            btnEl.className = 'px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500';
-            btnEl.disabled = false;
-            btnEl.onclick = () => toggleSession(true);
+            if (statusEl) {
+                statusEl.textContent = 'Tidak terhubung';
+                statusEl.className = 'text-sm text-gray-500';
+            }
+            if (btnEl) {
+                btnEl.textContent = 'Hubungkan';
+                btnEl.className = 'px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500';
+                btnEl.disabled = false;
+                btnEl.onclick = () => toggleSession(true);
+            }
             // Hide message sections
-            sendMessageSection.classList.add('hidden');
-            messageHistorySection.classList.add('hidden');
+            if (sendMessageSection) sendMessageSection.classList.add('hidden');
         }
     }
 
@@ -554,80 +547,61 @@
 
 
 
-    // Refresh message history
+    // Refresh session status
     async function refreshMessages() {
         const refreshBtn = document.getElementById('refreshStatusBtn');
-        const refreshIcon = refreshBtn.querySelector('i');
+        const refreshIcon = refreshBtn ? refreshBtn.querySelector('i') : null;
 
         // Add loading state
-        refreshBtn.disabled = true;
-        refreshIcon.classList.add('fa-spin');
+        if (refreshBtn) {
+            refreshBtn.disabled = true;
+        }
+        if (refreshIcon) {
+            refreshIcon.classList.add('fa-spin');
+        }
 
         try {
-            const response = await fetch(`${WA_GATEWAY_URL}/session`, {
-                method: 'GET'
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                const sessions = result.data || [];
-
-                // Check if amgpm session is in the active sessions list
-                if (sessions.includes('amgpm')) {
-                    // Session is connected
-                    updateSessionUI(true);
-                } else {
-                    // Session is not connected
-                    updateSessionUI(false);
-                }
-            }
+            // Check session status
+            await checkAMGPMSessionStatus();
         } catch (error) {
-            console.error('Error refreshing messages:', error);
+            console.error('Error refreshing status:', error);
             updateSessionUI(false, 'Gagal memeriksa status');
         } finally {
             // Remove loading state
-            refreshBtn.disabled = false;
-            refreshIcon.classList.remove('fa-spin');
+            if (refreshBtn) {
+                refreshBtn.disabled = false;
+            }
+            if (refreshIcon) {
+                refreshIcon.classList.remove('fa-spin');
+            }
         }
     }
 
 
 
-    // Update message history display
-    function updateMessageHistory(messages) {
-        const historyContainer = document.getElementById('messageHistory');
 
-        if (!messages || messages.length === 0) {
-            historyContainer.innerHTML = '<p class="text-gray-500 text-center py-8">Belum ada riwayat pesan</p>';
-            return;
-        }
 
-        const messageHTML = messages.slice(-10).reverse().map(msg => `
-            <div class="p-3 bg-gray-50 rounded-lg">
-                <div class="flex justify-between items-start mb-1">
-                    <span class="text-sm font-medium text-gray-900">${msg.to || 'Unknown'}</span>
-                    <span class="text-xs text-gray-500">${new Date(msg.timestamp).toLocaleString()}</span>
-                </div>
-                <p class="text-sm text-gray-700">${msg.text || msg.message || 'No message'}</p>
-            </div>
-        `).join('');
-
-        historyContainer.innerHTML = messageHTML;
-    }
-
-    // Delete session - GET /session/logout?session=SESSION_NAME
+    // Delete session using Laravel API
     async function deleteSession(sessionName) {
         if (!confirm(`Hapus sesi '${sessionName}'?`)) return;
 
         try {
-            const response = await fetch(`${WA_GATEWAY_URL}/session/logout?session=${sessionName}`, {
-                method: 'GET'
+            const formData = new FormData();
+            formData.append('sessionName', sessionName);
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+            const response = await fetch('{{ route("whatsapp.api.session.delete") }}', {
+                method: 'POST',
+                body: formData
             });
-            if (response.ok) {
+
+            const result = await response.json();
+
+            if (result.success) {
                 alert(`Sesi '${sessionName}' berhasil dihapus!`);
-                refreshSessions();
+                checkAMGPMSessionStatus();
             } else {
-                alert('Gagal menghapus sesi. Periksa koneksi wa-gateway.');
+                alert('Gagal menghapus sesi: ' + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error:', error);
@@ -635,7 +609,7 @@
         }
     }
 
-    // Send message using amgpm session
+    // Send message using Laravel API
     async function sendMessage() {
         const phoneNumber = document.getElementById('phoneNumber').value.trim();
         const messageText = document.getElementById('messageText').value.trim();
@@ -654,32 +628,30 @@
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
 
         try {
-            const response = await fetch(`${WA_GATEWAY_URL}/message/send-text`, {
+            const formData = new FormData();
+            formData.append('to', phoneNumber);
+            formData.append('message', messageText);
+            formData.append('isGroup', isGroup);
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+            const response = await fetch('{{ route("whatsapp.api.send.message") }}', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    session: 'amgpm',
-                    to: phoneNumber,
-                    text: messageText,
-                    is_group: isGroup
-                })
+                body: formData
             });
 
-            if (response.ok) {
+            const result = await response.json();
+
+            if (result.success) {
                 alert('Pesan berhasil dikirim!');
                 document.getElementById('phoneNumber').value = '';
                 document.getElementById('messageText').value = '';
                 document.getElementById('isGroup').checked = false;
-                addToMessageHistory('amgpm', phoneNumber, messageText, isGroup);
-                refreshMessages();
             } else {
-                alert('Gagal mengirim pesan. Pastikan nomor tujuan benar.');
+                alert('Gagal mengirim pesan: ' + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Gagal terhubung ke wa-gateway.');
+            alert('Gagal mengirim pesan.');
         } finally {
             // Reset button state
             submitBtn.disabled = false;
@@ -688,16 +660,16 @@
         }
     }
 
-    // Send image using amgpm session
+    // Send image using Laravel API
     async function sendImage() {
         const phoneNumber = document.getElementById('imagePhoneNumber').value.trim();
         const imageUrl = document.getElementById('imageUrl').value.trim();
-        const caption = document.getElementById('imageCaption').value.trim();
+        const text = document.getElementById('imageText').value.trim();
         const isGroup = document.getElementById('isImageGroup').checked;
         const submitBtn = document.querySelector('#sendImageForm button[type="submit"]');
 
-        if (!phoneNumber || !imageUrl || !caption) {
-            alert('Masukkan nomor tujuan, URL gambar, dan caption!');
+        if (!phoneNumber || !imageUrl) {
+            alert('Masukkan nomor tujuan dan URL gambar!');
             return;
         }
 
@@ -708,34 +680,32 @@
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
 
         try {
-            const response = await fetch(`${WA_GATEWAY_URL}/message/send-image`, {
+            const formData = new FormData();
+            formData.append('to', phoneNumber);
+            formData.append('imageUrl', imageUrl);
+            formData.append('text', text);
+            formData.append('isGroup', isGroup);
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+            const response = await fetch('{{ route("whatsapp.api.send.image") }}', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    session: 'amgpm',
-                    to: phoneNumber,
-                    text: caption,
-                    image_url: imageUrl,
-                    is_group: isGroup
-                })
+                body: formData
             });
 
-            if (response.ok) {
+            const result = await response.json();
+
+            if (result.success) {
                 alert('Gambar berhasil dikirim!');
                 document.getElementById('imagePhoneNumber').value = '';
                 document.getElementById('imageUrl').value = '';
-                document.getElementById('imageCaption').value = '';
+                document.getElementById('imageText').value = '';
                 document.getElementById('isImageGroup').checked = false;
-                addToMessageHistory('amgpm', phoneNumber, `[Gambar] ${caption}`, isGroup);
-                refreshMessages();
             } else {
-                alert('Gagal mengirim gambar. Pastikan URL gambar valid dan nomor tujuan benar.');
+                alert('Gagal mengirim gambar: ' + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Gagal terhubung ke wa-gateway.');
+            alert('Gagal mengirim gambar.');
         } finally {
             // Reset button state
             submitBtn.disabled = false;
@@ -744,17 +714,17 @@
         }
     }
 
-    // Send document using amgpm session
+    // Send document using Laravel API
     async function sendDocument() {
-        const phoneNumber = document.getElementById('documentPhoneNumber').value.trim();
-        const documentUrl = document.getElementById('documentUrl').value.trim();
-        const documentName = document.getElementById('documentName').value.trim();
-        const caption = document.getElementById('documentCaption').value.trim();
-        const isGroup = document.getElementById('isDocumentGroup').checked;
+        const to = document.getElementById('document_to').value.trim();
+        const text = document.getElementById('documentText').value.trim();
+        const document_url = document.getElementById('document_url').value.trim();
+        const document_name = document.getElementById('document_name').value.trim();
+        const is_group = document.getElementById('isDocumentGroup').checked;
         const submitBtn = document.querySelector('#sendDocumentForm button[type="submit"]');
 
-        if (!phoneNumber || !documentUrl || !documentName || !caption) {
-            alert('Masukkan semua field yang diperlukan!');
+        if (!to || !document_url || !document_name) {
+            alert('Masukkan nomor tujuan, URL dokumen, dan nama file!');
             return;
         }
 
@@ -765,36 +735,34 @@
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
 
         try {
-            const response = await fetch(`${WA_GATEWAY_URL}/message/send-document`, {
+            const formData = new FormData();
+            formData.append('to', to);
+            formData.append('text', text);
+            formData.append('document_url', document_url);
+            formData.append('document_name', document_name);
+            formData.append('is_group', is_group);
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+            const response = await fetch('{{ route("whatsapp.api.send.document") }}', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    session: 'amgpm',
-                    to: phoneNumber,
-                    text: caption,
-                    document_url: documentUrl,
-                    document_name: documentName,
-                    is_group: isGroup
-                })
+                body: formData
             });
 
-            if (response.ok) {
+            const result = await response.json();
+
+            if (result.success) {
                 alert('Dokumen berhasil dikirim!');
-                document.getElementById('documentPhoneNumber').value = '';
-                document.getElementById('documentUrl').value = '';
-                document.getElementById('documentName').value = '';
-                document.getElementById('documentCaption').value = '';
+                document.getElementById('document_to').value = '';
+                document.getElementById('document_url').value = '';
+                document.getElementById('document_name').value = '';
+                document.getElementById('documentText').value = '';
                 document.getElementById('isDocumentGroup').checked = false;
-                addToMessageHistory('amgpm', phoneNumber, `[Dokumen: ${documentName}] ${caption}`, isGroup);
-                refreshMessages();
             } else {
-                alert('Gagal mengirim dokumen. Pastikan URL dokumen valid dan nomor tujuan benar.');
+                alert('Gagal mengirim dokumen: ' + (result.message || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Gagal terhubung ke wa-gateway.');
+            alert('Gagal mengirim dokumen.');
         } finally {
             // Reset button state
             submitBtn.disabled = false;
@@ -821,45 +789,14 @@
         await sendDocument();
     });
 
-    // Add to message history
-    function addToMessageHistory(session, to, text, isGroup) {
-        const container = document.getElementById('messageHistory');
-        const timestamp = new Date().toLocaleString('id-ID');
 
-        // Remove empty state if exists
-        if (container.querySelector('.text-center')) {
-            container.innerHTML = '';
-        }
-
-        const messageItem = document.createElement('div');
-        messageItem.className = 'p-4 bg-gray-50 rounded-lg border-l-4 border-green-500';
-        messageItem.innerHTML = `
-            <div class="flex items-start justify-between">
-                <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="text-sm font-medium text-gray-900">Sesi: ${session}</span>
-                        <span class="text-xs text-gray-500">•</span>
-                        <span class="text-sm text-gray-600">Ke: ${to}</span>
-                        ${isGroup ? '<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Grup</span>' : ''}
-                    </div>
-                    <p class="text-gray-800 mb-2">${text}</p>
-                    <p class="text-xs text-gray-500">${timestamp}</p>
-                </div>
-                <div class="text-green-600">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-            </div>
-        `;
-
-        container.insertBefore(messageItem, container.firstChild);
-    }
 
     // Initialize Select2 for all contact dropdowns
     function initializeSelect2() {
         const selects = [
             { id: '#contactSelect', target: '#phoneNumber' },
             { id: '#imageContactSelect', target: '#imagePhoneNumber' },
-            { id: '#documentContactSelect', target: '#documentPhoneNumber' }
+            { id: '#documentContactSelect', target: '#document_to' }
         ];
 
         selects.forEach(function(selectConfig) {
@@ -938,22 +875,30 @@
             });
 
             // If we reach here, the server is running
-            statusIndicator.className = 'w-3 h-3 rounded-full bg-green-500';
-            statusText.textContent = 'Gateway Running';
-            statusText.className = 'text-sm font-medium text-green-600';
+            if (statusIndicator) {
+                statusIndicator.className = 'w-3 h-3 rounded-full bg-green-500';
+            }
+            if (statusText) {
+                statusText.textContent = 'Gateway Running';
+                statusText.className = 'text-sm font-medium text-green-600';
+            }
 
             // Show main content, hide instructions
-            gatewayInstructions.classList.add('hidden');
-            mainContent.classList.remove('hidden');
+            if (gatewayInstructions) gatewayInstructions.classList.add('hidden');
+            if (mainContent) mainContent.classList.remove('hidden');
         } catch (error) {
             // Server is not running
-            statusIndicator.className = 'w-3 h-3 rounded-full bg-red-500';
-            statusText.textContent = 'Gateway Stopped';
-            statusText.className = 'text-sm font-medium text-red-600';
+            if (statusIndicator) {
+                statusIndicator.className = 'w-3 h-3 rounded-full bg-red-500';
+            }
+            if (statusText) {
+                statusText.textContent = 'Gateway Stopped';
+                statusText.className = 'text-sm font-medium text-red-600';
+            }
 
             // Hide main content, show instructions
-            mainContent.classList.add('hidden');
-            gatewayInstructions.classList.remove('hidden');
+            if (mainContent) mainContent.classList.add('hidden');
+            if (gatewayInstructions) gatewayInstructions.classList.remove('hidden');
         }
     }
 

@@ -7,7 +7,7 @@ use App\Http\Controllers\IbadahController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\UlangTahunController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Pengaturan\WhatsappController;
+use App\Http\Controllers\WhatsappController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -63,6 +63,22 @@ Route::middleware('auth')->prefix('pengaturan')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::get('whatsapp', [WhatsappController::class, 'index'])->name('pengaturan.whatsapp.index');
         Route::get('whatsapp/contacts', [WhatsappController::class, 'getContacts'])->name('pengaturan.whatsapp.contacts');
+
+        // WhatsApp API Routes
+        Route::prefix('whatsapp/api')->group(function () {
+            // Gateway management
+            Route::get('status', [WhatsappController::class, 'getStatus'])->name('whatsapp.api.status');
+            Route::get('session/status', [WhatsappController::class, 'getSession'])->name('whatsapp.api.session.status');
+            Route::post('session/add', [WhatsappController::class, 'addSession'])->name('whatsapp.api.session.add');
+            Route::post('session/delete', [WhatsappController::class, 'deleteSession'])->name('whatsapp.api.session.delete');
+
+            // Message sending
+            Route::post('send/message', [WhatsappController::class, 'sendMessage'])->name('whatsapp.api.send.message');
+            Route::post('send/image', [WhatsappController::class, 'sendImage'])->name('whatsapp.api.send.image');
+            Route::post('send/document', [WhatsappController::class, 'sendDocument'])->name('whatsapp.api.send.document');
+
+
+        });
     });
 });
 
