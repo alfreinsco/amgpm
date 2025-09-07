@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | WhatsApp Gateway URL
+    |--------------------------------------------------------------------------
+    |
+    | This value is the base URL for wa-gateway API service. You can set this
+    | in your ".env" file using WA_GATEWAY_URL variable.
+    |
+    */
+
+    'wa_gateway_url' => env('WA_GATEWAY_URL', 'http://localhost:5001'),
+
 ];

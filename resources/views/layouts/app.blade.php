@@ -85,8 +85,14 @@
                                 </a>
                             </li>
                             <!-- Menu Items -->
-                            {{-- <li><a href="{{ route('profile.show') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200"><i class="fas fa-user text-green-600"></i><span class="font-medium">Profil Saya</span></a></li>
-                            <li class="divider my-2"></li> --}}
+                            {{-- <li><a href="{{ route('profile.show') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200"><i class="fas fa-user text-green-600"></i><span class="font-medium">Profil Saya</span></a></li> --}}
+                            <li>
+                                <a href="{{ route('pengaturan.whatsapp.index') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200">
+                                    <i class="fas fa-gear text-gray-600"></i>
+                                    <span class="font-medium">Pengaturan</span>
+                                </a>
+                            </li>
+                            <li class="divider my-2"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                                     @csrf
@@ -141,6 +147,6 @@
     @endif
 
     @stack('scripts')
-    <script src="fontawesome/js/all.min.js"></script>
+    <script src="{{ asset('fontawesome/js/all.min.js') }}"></script>
 </body>
 </html>

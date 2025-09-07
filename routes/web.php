@@ -7,6 +7,7 @@ use App\Http\Controllers\IbadahController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\UlangTahunController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Pengaturan\WhatsappController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -53,3 +54,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/ulang-tahun', [UlangTahunController::class, 'index'])->name('ulang-tahun.index');
 });
+
+// Pengaturan Routes
+Route::middleware('auth')->prefix('pengaturan')->group(function () {
+    // Admin only routes
+    Route::middleware('admin')->group(function () {
+        Route::get('whatsapp', [WhatsappController::class, 'index'])->name('pengaturan.whatsapp.index');
+    });
+});
+
