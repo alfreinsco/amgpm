@@ -171,13 +171,13 @@ Setelah menjalankan seeder, tersedia akun default:
 
 **Administrator:**
 
--   Email: `admin@amgpm.com`
--   Password: `admin@amgpm.com`
+-   Email: `admin@amgpm.test`
+-   Password: `admin@amgpm.test`
 
 **User Biasa:**
 
--   Email: `user@amgpm.com`
--   Password: `user@amgpm.com`
+-   Email: `user@amgpm.test`
+-   Password: `user@amgpm.test`
 
 ## 📱 Penggunaan WhatsApp Gateway
 

@@ -35,7 +35,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        $request->validate([
+        $validated = $request->validate([
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'whatsapp' => ['nullable', 'string', 'max:20'],
@@ -46,6 +46,9 @@ class ProfileController extends Controller
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
+        // Format the phone number
+        $validated['whatsapp'] = formatPhoneNumber($validated['whatsapp']);
+
         // Verify current password if user wants to change password
         if ($request->filled('current_password')) {
             if (!Hash::check($request->current_password, $user->password)) {
@@ -55,12 +58,12 @@ class ProfileController extends Controller
 
         // Prepare update data
         $updateData = [
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'whatsapp' => $request->whatsapp,
-            'tempat_lahir' => $request->tempat_lahir,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'golongan_darah' => $request->golongan_darah,
+            'nama' => $validated['nama'],
+            'email' => $validated['email'],
+            'whatsapp' => $validated['whatsapp'],
+            'tempat_lahir' => $validated['tempat_lahir'],
+            'tanggal_lahir' => $validated['tanggal_lahir'],
+            'golongan_darah' => $validated['golongan_darah'],
         ];
 
         // Add password to update data if provided

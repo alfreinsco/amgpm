@@ -66,6 +66,9 @@ class AnggotaController extends Controller
             'is_admin' => 'boolean'
         ]);
 
+        // Format the phone number
+        $validated['whatsapp'] = formatPhoneNumber($validated['whatsapp']);
+
         // Generate password from birth date (YYYYMMDD format)
         $birthDate = Carbon::parse($validated['tanggal_lahir']);
         $defaultPassword = $birthDate->format('Ymd');
@@ -109,6 +112,9 @@ class AnggotaController extends Controller
             'whatsapp' => ['required', 'string', Rule::unique('users')->ignore($anggotum->id)],
             'is_admin' => 'boolean'
         ]);
+
+        // Format the phone number
+        $validated['whatsapp'] = formatPhoneNumber($validated['whatsapp']);
 
         $validated['is_admin'] = $request->has('is_admin');
 

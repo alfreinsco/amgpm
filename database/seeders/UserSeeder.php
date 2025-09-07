@@ -15,10 +15,10 @@ class UserSeeder extends Seeder
         // Create admin user
         \App\Models\User::factory()->create([
             'nama' => 'Admin AMGPM',
-            'email' => 'admin@amgpm.com',
-            'password' => bcrypt('admin@amgpm.com'),
+            'email' => 'admin@amgpm.test',
+            'password' => bcrypt('admin@amgpm.test'),
             'tempat_lahir' => 'Jakarta',
-            'tanggal_lahir' => '1990-01-01',
+            'tanggal_lahir' => '2001-01-14',
             'golongan_darah' => 'O',
             'whatsapp' => '6281318812027',
             'is_admin' => true
@@ -27,12 +27,12 @@ class UserSeeder extends Seeder
         // Create regular user
         \App\Models\User::factory()->create([
             'nama' => 'User Biasa',
-            'email' => 'user@amgpm.com',
-            'password' => bcrypt('user@amgpm.com'),
+            'email' => 'user@amgpm.test',
+            'password' => bcrypt('user@amgpm.test'),
             'tempat_lahir' => 'Jakarta',
-            'tanggal_lahir' => '1995-01-01',
-            'golongan_darah' => 'A',
-            'whatsapp' => '6281318812028',
+            'tanggal_lahir' => '2001-01-14',
+            'golongan_darah' => 'O',
+            'whatsapp' => '6281248808575',
             'is_admin' => false
         ]);
 

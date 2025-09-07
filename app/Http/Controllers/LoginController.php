@@ -34,6 +34,11 @@ class LoginController extends Controller
         // Tentukan apakah login menggunakan email atau whatsapp
         $fieldType = filter_var($loginField, FILTER_VALIDATE_EMAIL) ? 'email' : 'whatsapp';
 
+        // Format phone number if login uses whatsapp
+        if ($fieldType === 'whatsapp') {
+            $loginField = formatPhoneNumber($loginField);
+        }
+
         // Cari user berdasarkan email atau whatsapp
         $user = User::where($fieldType, $loginField)->first();
 
