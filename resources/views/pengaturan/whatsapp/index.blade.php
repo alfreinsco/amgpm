@@ -35,6 +35,12 @@
 </style>
 @endpush
 
+@push('styles')
+<!-- jQuery and Select2 Scripts in Head -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endpush
+
 @section('content')
 <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,9 +50,15 @@
                 <div class="p-3 bg-green-100 rounded-xl">
                     <i class="fab fa-whatsapp text-2xl text-green-600"></i>
                 </div>
-                <div>
+                <div class="flex-1">
                     <h1 class="text-3xl font-bold text-gray-900">WhatsApp Gateway</h1>
                     <p class="text-gray-600 mt-1">Kelola sesi WhatsApp dan kirim pesan otomatis</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div id="gateway-status" class="flex items-center gap-2 px-3 py-2 rounded-lg">
+                        <div id="status-indicator" class="w-3 h-3 rounded-full bg-gray-400"></div>
+                        <span id="status-text" class="text-sm font-medium text-gray-600">Checking...</span>
+                    </div>
                 </div>
             </div>
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -60,7 +72,42 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Gateway Instructions (Only shown when gateway is stopped) -->
+        <div id="gatewayInstructions" class="hidden bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8">
+            <div class="flex items-start gap-4">
+                <div class="p-3 bg-yellow-100 rounded-xl">
+                    <i class="fas fa-exclamation-triangle text-2xl text-yellow-600"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-semibold text-yellow-800 mb-2">WhatsApp Gateway Tidak Berjalan</h3>
+                    <p class="text-yellow-700 mb-4">Untuk menggunakan fitur WhatsApp Gateway, Anda perlu menjalankan wa-gateway terlebih dahulu.</p>
+
+                    <div class="bg-white rounded-lg p-4 border border-yellow-200">
+                        <h4 class="font-semibold text-gray-900 mb-3">Cara Menjalankan wa-gateway:</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                            <li>Buka terminal/command prompt</li>
+                            <li>Navigasi ke folder proyek: <code class="bg-gray-100 px-2 py-1 rounded text-xs">cd /path/to/amgpm</code></li>
+                            <li>Masuk ke folder wa-gateway: <code class="bg-gray-100 px-2 py-1 rounded text-xs">cd wa-gateway</code></li>
+                            <li>Install dependencies (jika belum): <code class="bg-gray-100 px-2 py-1 rounded text-xs">npm install</code></li>
+                            <li>Jalankan gateway: <code class="bg-gray-100 px-2 py-1 rounded text-xs">npm run start</code></li>
+                        </ol>
+
+                        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p class="text-sm text-blue-800">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                <strong>Catatan:</strong> Gateway akan berjalan di <code class="bg-blue-100 px-1 rounded">http://localhost:5001</code>
+                            </p>
+                        </div>
+                    </div>
+
+                    <button onclick="window.location.href='{{ route('pengaturan.whatsapp.index') }}'" class="cursor-pointer mt-4 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors duration-200">
+                        <i class="fas fa-sync-alt mr-2"></i>Periksa Status Lagi
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mainContent" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Session Management -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="p-6 border-b border-gray-200">
@@ -863,7 +910,7 @@
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
         checkAMGPMSessionStatus();
-        
+
         // Wait for jQuery to be loaded
         if (typeof $ !== 'undefined') {
             initializeSelect2();
@@ -877,17 +924,49 @@
         }
     });
 
+    // Check wa-gateway status
+    async function checkGatewayStatus() {
+        const statusIndicator = document.getElementById('status-indicator');
+        const statusText = document.getElementById('status-text');
+        const gatewayInstructions = document.getElementById('gatewayInstructions');
+        const mainContent = document.getElementById('mainContent');
+
+        try {
+            const response = await fetch('{{config('app.wa_gateway_url')}}', {
+                method: 'GET',
+                mode: 'no-cors'
+            });
+
+            // If we reach here, the server is running
+            statusIndicator.className = 'w-3 h-3 rounded-full bg-green-500';
+            statusText.textContent = 'Gateway Running';
+            statusText.className = 'text-sm font-medium text-green-600';
+
+            // Show main content, hide instructions
+            gatewayInstructions.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+        } catch (error) {
+            // Server is not running
+            statusIndicator.className = 'w-3 h-3 rounded-full bg-red-500';
+            statusText.textContent = 'Gateway Stopped';
+            statusText.className = 'text-sm font-medium text-red-600';
+
+            // Hide main content, show instructions
+            mainContent.classList.add('hidden');
+            gatewayInstructions.classList.remove('hidden');
+        }
+    }
+
+
+
     // Also initialize when jQuery is ready
     $(document).ready(function() {
         initializeSelect2();
+        checkGatewayStatus();
     });
-</script>
 
-@push('scripts')
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-@endpush
+    // Check status periodically
+    setInterval(checkGatewayStatus, 30000); // Check every 30 seconds
+</script>
 
 @endsection

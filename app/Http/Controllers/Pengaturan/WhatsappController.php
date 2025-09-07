@@ -15,7 +15,7 @@ class WhatsappController extends Controller
     public function getContacts(Request $request)
     {
         $query = $request->get('q', '');
-        
+
         $contacts = User::whereNotNull('whatsapp')
                        ->where('whatsapp', '!=', '')
                        ->when($query, function($q) use ($query) {
