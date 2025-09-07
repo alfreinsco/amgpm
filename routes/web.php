@@ -64,3 +64,16 @@ Route::middleware('auth')->prefix('pengaturan')->group(function () {
     });
 });
 
+// Dokumentasi Route
+Route::get('/dokumentasi', function () {
+    $readmePath = base_path('README.md');
+
+    if (!file_exists($readmePath)) {
+        abort(404, 'Dokumentasi tidak ditemukan');
+    }
+
+    $content = file_get_contents($readmePath);
+
+    return view('dokumentasi.index', compact('content'));
+})->name('dokumentasi.index');
+

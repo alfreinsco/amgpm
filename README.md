@@ -1,61 +1,289 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AMGPM - Sistem Informasi Ranting Parthenos
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![AMGPM Logo](public/img/logo-amgpm.png)
 
-## About Laravel
+Sistem Informasi AMGPM (Angkatan Muda Gereja Protestan Maluku) Ranting Parthenos adalah aplikasi web berbasis Laravel yang dirancang untuk mengelola data keanggotaan, jadwal ibadah, dan komunikasi WhatsApp untuk organisasi gereja.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 📊 Dashboard
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+-   **Statistik Real-time**: Menampilkan total anggota, kegiatan mendatang, dan ulang tahun
+-   **Widget Informatif**: Ringkasan data penting dalam tampilan yang mudah dipahami
+-   **Navigasi Intuitif**: Akses cepat ke semua fitur utama
 
-## Learning Laravel
+### 👥 Manajemen Anggota
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   **Database Anggota Lengkap**: Menyimpan data pribadi anggota (nama, email, tempat/tanggal lahir, golongan darah, WhatsApp)
+-   **Sistem Role**: Pembagian hak akses antara Administrator dan Member
+-   **Pencarian & Filter**: Cari anggota berdasarkan nama, email, atau status admin
+-   **Reset Password**: Fitur reset password otomatis berdasarkan tanggal lahir (format: YYYYMMDD)
+-   **Validasi Data**: Validasi email dan nomor WhatsApp yang unik
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### ⛪ Manajemen Jadwal Ibadah
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   **CRUD Jadwal**: Tambah, edit, hapus, dan lihat jadwal ibadah
+-   **Detail Lengkap**: Nama ibadah, tanggal, waktu, lokasi, pemimpin, pemandu, tema, dan catatan
+-   **Pencarian Advanced**: Cari berdasarkan nama, lokasi, pemimpin, pemandu, atau catatan
+-   **Filter Tanggal**: Filter jadwal berdasarkan rentang tanggal
+-   **Scope Query**: Jadwal mendatang, hari ini, dan yang sudah lewat
+-   **Tracking User**: Mencatat siapa yang membuat/mengubah jadwal
 
-## Laravel Sponsors
+### 🎂 Jadwal Ulang Tahun
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+-   **Kalender Ulang Tahun**: Tampilkan anggota yang berulang tahun per bulan
+-   **Filter Bulanan**: Pilih bulan untuk melihat daftar ulang tahun
+-   **Sorting Otomatis**: Urutkan berdasarkan tanggal dalam bulan
+-   **Widget Dashboard**: Tampilkan ulang tahun bulan ini dan minggu ini
 
-### Premium Partners
+### 📱 WhatsApp Gateway Integration
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+-   **Multi-Session Management**: Kelola multiple sesi WhatsApp menggunakan wa-gateway
+-   **Status Monitoring**: Real-time monitoring status koneksi gateway
+-   **QR Code Authentication**: Login WhatsApp melalui QR code
+-   **Pengiriman Pesan**: Kirim pesan teks, gambar, dan dokumen
+-   **Contact Integration**: Pilih kontak dari database anggota
+-   **Message History**: Log pesan yang telah dikirim
+-   **Auto-hide Features**: Sembunyikan fitur saat gateway tidak aktif
 
-## Contributing
+### 🔐 Sistem Autentikasi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+-   **Multi-Login**: Login menggunakan email atau nomor WhatsApp
+-   **Session Management**: Pengelolaan sesi yang aman
+-   **Role-based Access**: Kontrol akses berdasarkan role user
+-   **Profile Management**: Edit profil dan ubah password
 
-## Code of Conduct
+## 🛠️ Teknologi yang Digunakan
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Backend
 
-## Security Vulnerabilities
+-   **Laravel 11**: Framework PHP modern
+-   **MySQL**: Database relational
+-   **Eloquent ORM**: Object-Relational Mapping
+-   **Laravel Factories & Seeders**: Data seeding dan testing
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Frontend
 
-## License
+-   **Blade Templates**: Template engine Laravel
+-   **Tailwind CSS**: Utility-first CSS framework
+-   **DaisyUI**: Component library untuk Tailwind
+-   **Font Awesome**: Icon library
+-   **JavaScript Vanilla**: Interaksi frontend
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### WhatsApp Integration
+
+-   **wa-gateway**: Node.js WhatsApp gateway
+-   **wa-multi-session**: Multi-session WhatsApp library
+-   **Hono**: Lightweight web framework untuk gateway
+
+## 📋 Persyaratan Sistem
+
+-   PHP >= 8.2
+-   Composer
+-   Node.js >= 18
+-   MySQL >= 8.0
+-   Git
+
+## 🚀 Instalasi
+
+### 1. Clone Repository
+
+```bash
+git clone <repository-url>
+cd amgpm
+```
+
+### 2. Install Dependencies
+
+```bash
+# Install PHP dependencies
+composer install
+
+# Install Node.js dependencies untuk wa-gateway
+cd wa-gateway
+npm install
+cd ..
+```
+
+### 3. Konfigurasi Environment
+
+```bash
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+```
+
+### 4. Konfigurasi Database
+
+Edit file `.env` dan sesuaikan konfigurasi database:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=amgpm
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### 5. Migrasi dan Seeding
+
+```bash
+# Jalankan migrasi
+php artisan migrate
+
+# Jalankan seeder (opsional)
+php artisan db:seed
+```
+
+### 6. Konfigurasi WhatsApp Gateway
+
+Edit file `wa-gateway/.env`:
+
+```env
+PORT=5001
+```
+
+## 🏃‍♂️ Menjalankan Aplikasi
+
+### 1. Jalankan Laravel Server
+
+```bash
+php artisan serve
+```
+
+Aplikasi akan berjalan di `http://127.0.0.1:8000`
+
+### 2. Jalankan WhatsApp Gateway
+
+```bash
+cd wa-gateway
+npm run start
+```
+
+Gateway akan berjalan di `http://localhost:5001`
+
+## 👤 Akun Default
+
+Setelah menjalankan seeder, tersedia akun default:
+
+**Administrator:**
+
+-   Email: `admin@amgpm.com`
+-   Password: `admin@amgpm.com`
+
+**User Biasa:**
+
+-   Email: `user@amgpm.com`
+-   Password: `user@amgpm.com`
+
+## 📱 Penggunaan WhatsApp Gateway
+
+### Setup Awal
+
+1. Pastikan wa-gateway berjalan di `http://localhost:5001`
+2. Akses menu **Pengaturan > WhatsApp** (hanya admin)
+3. Klik tombol **Mulai Sesi** untuk memulai sesi WhatsApp
+4. Scan QR code yang muncul dengan WhatsApp di ponsel
+5. Tunggu hingga status berubah menjadi "Terhubung"
+
+### Mengirim Pesan
+
+1. Pilih kontak dari dropdown atau masukkan nomor manual
+2. Tulis pesan yang ingin dikirim
+3. Pilih jenis pesan (teks, gambar, atau dokumen)
+4. Klik tombol kirim
+
+## 🗂️ Struktur Database
+
+### Tabel Users
+
+-   `id`: Primary key
+-   `nama`: Nama lengkap anggota
+-   `email`: Email (unique)
+-   `password`: Password (hashed)
+-   `tempat_lahir`: Tempat lahir
+-   `tanggal_lahir`: Tanggal lahir
+-   `golongan_darah`: Golongan darah (A, B, AB, O)
+-   `whatsapp`: Nomor WhatsApp (unique)
+-   `is_admin`: Status administrator (boolean)
+-   `email_verified_at`: Timestamp verifikasi email
+-   `whatsapp_verified_at`: Timestamp verifikasi WhatsApp
+
+### Tabel Ibadah
+
+-   `id`: Primary key
+-   `nama`: Nama ibadah
+-   `tanggal`: Tanggal ibadah
+-   `waktu`: Waktu ibadah
+-   `lokasi`: Lokasi ibadah
+-   `pemimpin`: Pemimpin ibadah
+-   `pemandu`: Pemandu ibadah (nullable)
+-   `tema`: Tema ibadah (nullable)
+-   `catatan`: Catatan tambahan (nullable)
+-   `user_id`: Foreign key ke users
+
+## 🔧 Konfigurasi Tambahan
+
+### WhatsApp Gateway URL
+
+Dalam file `config/app.php`, terdapat konfigurasi:
+
+```php
+'wa_gateway_url' => env('WA_GATEWAY_URL', 'http://localhost:5001'),
+```
+
+Ubah di file `.env` jika gateway berjalan di port/host berbeda:
+
+```env
+WA_GATEWAY_URL=http://localhost:5001
+```
+
+## 🚨 Troubleshooting
+
+### Gateway Tidak Terhubung
+
+1. Pastikan wa-gateway berjalan di port 5001
+2. Periksa firewall dan port yang digunakan
+3. Cek log di terminal wa-gateway untuk error
+
+### QR Code Tidak Muncul
+
+1. Refresh halaman pengaturan WhatsApp
+2. Restart wa-gateway
+3. Hapus session lama dan buat session baru
+
+### Pesan Tidak Terkirim
+
+1. Pastikan nomor tujuan dalam format internasional (62xxx)
+2. Periksa status koneksi WhatsApp
+3. Cek apakah session masih aktif
+
+## 🤝 Kontribusi
+
+Untuk berkontribusi pada proyek ini:
+
+1. Fork repository
+2. Buat branch fitur baru (`git checkout -b feature/AmazingFeature`)
+3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
+4. Push ke branch (`git push origin feature/AmazingFeature`)
+5. Buat Pull Request
+
+## 📄 Lisensi
+
+Proyek ini menggunakan lisensi MIT. Lihat file `LICENSE` untuk detail lebih lanjut.
+
+## 📞 Kontak
+
+Untuk pertanyaan atau dukungan, silakan hubungi:
+
+-   Email: admin@amgpm.com
+-   WhatsApp: +62 813-1881-2027
+
+---
+
+**AMGPM Ranting Parthenos** - Sistem Informasi untuk Angkatan Muda Gereja Protestan Maluku
+
+_"Kelola data keanggotaan dan informasi ranting dengan mudah dan efisien."_
