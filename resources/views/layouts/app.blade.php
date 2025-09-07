@@ -37,9 +37,9 @@
                     </div>
 
                     <!-- Logo and Brand -->
-                    <a href="{{ route('dashboard') }}" class="btn btn-ghost text-xl flex items-center gap-3 text-gray-800 hover:bg-gray-100 border-none transition-all duration-300 group">
+                    <a href="{{ route('dashboard') }}" class="btn btn-ghost text-xl flex items-center text-gray-800 hover:bg-gray-100 border-none transition-all duration-300 group">
                         <div class="relative">
-                            <img src="{{ asset('img/logo-amgpm.png') }}" alt="AMGPM Logo" class="h-10 w-10 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <img src="{{ asset('img/logo-amgpm.png') }}" alt="AMGPM Logo" class="h-12 w-12 group-hover:scale-110 transition-transform duration-300">
                             <div class="absolute inset-0 rounded-full bg-gray-200/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
                         <div class="flex flex-col items-start">
@@ -85,7 +85,7 @@
                                 </a>
                             </li>
                             <!-- Menu Items -->
-                            {{-- <li><a href="{{ route('profile.show') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200"><i class="fas fa-user text-green-600"></i><span class="font-medium">Profil Saya</span></a></li> --}}
+                            <li><a href="{{ route('profile.show') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200"><i class="fas fa-user text-green-600"></i><span class="font-medium">Profil Saya</span></a></li>
                             @if(Auth::check() && Auth::user()->is_admin)
                             <li>
                                 <a href="{{ route('pengaturan.whatsapp.index') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200">
@@ -93,8 +93,14 @@
                                     <span class="font-medium">Pengaturan</span>
                                 </a>
                             </li>
-                            <li class="divider my-2"></li>
                             @endif
+                            <li>
+                                <a href="{{ route('dokumentasi.index') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200">
+                                    <i class="fas fa-book text-indigo-600"></i>
+                                    <span class="font-medium">Dokumentasi</span>
+                                </a>
+                            </li>
+                            <li class="divider my-2"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                                     @csrf
