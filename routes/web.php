@@ -60,6 +60,7 @@ Route::middleware('auth')->prefix('pengaturan')->group(function () {
     // Admin only routes
     Route::middleware('admin')->group(function () {
         Route::get('whatsapp', [WhatsappController::class, 'index'])->name('pengaturan.whatsapp.index');
+        Route::get('whatsapp/contacts', [WhatsappController::class, 'getContacts'])->name('pengaturan.whatsapp.contacts');
     });
 });
 

@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'tempat_lahir' => fake()->city(),
             'tanggal_lahir' => fake()->date(),
             'golongan_darah' => fake()->randomElement(['A', 'B', 'AB', 'O']),
-            'whatsapp' => fake()->unique()->phoneNumber(),
+            'whatsapp' => '62' . substr(fake()->unique()->numerify('8##########'), 0),
             'whatsapp_verified_at' => now(),
             'is_admin' => false,
             'remember_token' => Str::random(10),

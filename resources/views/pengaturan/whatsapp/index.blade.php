@@ -2,6 +2,39 @@
 
 @section('title', 'Pengaturan WhatsApp Gateway')
 
+@push('styles')
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+.select2-container--default .select2-selection--single {
+    height: 42px;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+}
+.select2-container {
+    width: 100% !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding: 0;
+    line-height: normal;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px;
+    right: 12px;
+}
+.select2-dropdown {
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #3b82f6;
+}
+</style>
+@endpush
+
 @section('content')
 <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -93,6 +126,14 @@
                 </div>
                 <div class="p-6">
                     <form id="sendMessageForm" class="space-y-4">
+                        <!-- Contact Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Kontak</label>
+                            <select id="contactSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">-- Pilih dari kontak atau masukkan manual --</option>
+                            </select>
+                        </div>
+
                         <!-- Phone Number -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Tujuan</label>
@@ -137,6 +178,14 @@
                 </div>
                 <div class="p-6">
                     <form id="sendImageForm" class="space-y-4">
+                        <!-- Contact Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Kontak</label>
+                            <select id="imageContactSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                                <option value="">-- Pilih dari kontak atau masukkan manual --</option>
+                            </select>
+                        </div>
+
                         <!-- Phone Number -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Tujuan</label>
@@ -190,6 +239,14 @@
                 </div>
                 <div class="p-6">
                     <form id="sendDocumentForm" class="space-y-4">
+                        <!-- Contact Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Kontak</label>
+                            <select id="documentContactSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                <option value="">-- Pilih dari kontak atau masukkan manual --</option>
+                            </select>
+                        </div>
+
                         <!-- Phone Number -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Tujuan</label>
@@ -750,9 +807,87 @@
         container.insertBefore(messageItem, container.firstChild);
     }
 
+    // Initialize Select2 for all contact dropdowns
+    function initializeSelect2() {
+        const selects = [
+            { id: '#contactSelect', target: '#phoneNumber' },
+            { id: '#imageContactSelect', target: '#imagePhoneNumber' },
+            { id: '#documentContactSelect', target: '#documentPhoneNumber' }
+        ];
+
+        selects.forEach(function(selectConfig) {
+            $(selectConfig.id).select2({
+                placeholder: '-- Pilih dari kontak atau masukkan manual --',
+                allowClear: true,
+                ajax: {
+                    url: '{{ route("pengaturan.whatsapp.contacts") }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term // search term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.results
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 0,
+                templateResult: function(contact) {
+                    if (contact.loading) {
+                        return contact.text;
+                    }
+                    return contact.text;
+                },
+                templateSelection: function(contact) {
+                    return contact.text || contact.id;
+                }
+            });
+
+            // Handle selection
+            $(selectConfig.id).on('select2:select', function (e) {
+                const data = e.params.data;
+                $(selectConfig.target).val(data.id);
+            });
+
+            // Handle clear
+            $(selectConfig.id).on('select2:clear', function (e) {
+                $(selectConfig.target).val('');
+            });
+        });
+    }
+
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
         checkAMGPMSessionStatus();
+        
+        // Wait for jQuery to be loaded
+        if (typeof $ !== 'undefined') {
+            initializeSelect2();
+        } else {
+            // Fallback if jQuery is not loaded yet
+            setTimeout(function() {
+                if (typeof $ !== 'undefined') {
+                    initializeSelect2();
+                }
+            }, 100);
+        }
+    });
+
+    // Also initialize when jQuery is ready
+    $(document).ready(function() {
+        initializeSelect2();
     });
 </script>
+
+@push('scripts')
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endpush
+
 @endsection
