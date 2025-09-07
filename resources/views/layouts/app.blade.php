@@ -86,6 +86,7 @@
                             </li>
                             <!-- Menu Items -->
                             {{-- <li><a href="{{ route('profile.show') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200"><i class="fas fa-user text-green-600"></i><span class="font-medium">Profil Saya</span></a></li> --}}
+                            @if(Auth::check() && Auth::user()->is_admin)
                             <li>
                                 <a href="{{ route('pengaturan.whatsapp.index') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200">
                                     <i class="fas fa-gear text-gray-600"></i>
@@ -93,6 +94,7 @@
                                 </a>
                             </li>
                             <li class="divider my-2"></li>
+                            @endif
                             <li>
                                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                                     @csrf
