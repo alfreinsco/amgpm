@@ -27,9 +27,73 @@
                 </a>
             </div>
 
-            <form method="POST" action="{{ route('profile.update') }}">
+            <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+
+                <!-- Profile Photo Section -->
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-2xl border border-purple-100 shadow-lg mb-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-camera text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Foto Profil</h3>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+                        <!-- Current Photo Display -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative">
+                                @if($user->profile_photo)
+                                    <img src="{{ asset('storage/' . $user->profile_photo) }}"
+                                         alt="Foto Profil"
+                                         class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                                @else
+                                    <div class="w-32 h-32 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                                        {{ strtoupper(substr($user->nama ?? 'U', 0, 1)) }}
+                                    </div>
+                                @endif
+                            </div>
+
+                            @if($user->profile_photo)
+                                <form method="POST" action="{{ route('profile.photo.remove') }}" class="mt-4">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="btn btn-sm bg-red-500 hover:bg-red-600 text-white rounded-lg px-4 py-2 transition-all duration-200"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus foto profil?')">
+                                        <i class="fas fa-trash mr-1"></i>
+                                        Hapus Foto
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+
+                        <!-- Upload New Photo -->
+                        <div class="flex-1">
+                            <label for="profile_photo" class="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-upload text-purple-500 mr-2"></i>
+                                Upload Foto Profil Baru
+                            </label>
+                            <input type="file"
+                                   id="profile_photo"
+                                   name="profile_photo"
+                                   accept="image/jpeg,image/png,image/jpg,image/gif"
+                                   class="file-input file-input-bordered w-full rounded-xl bg-white border-2 border-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 @error('profile_photo') border-red-500 @enderror">
+
+                            @error('profile_photo')
+                                <p class="mt-2 text-xs text-red-500 flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
+
+                            <p class="mt-2 text-xs text-gray-500">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Format yang didukung: JPEG, PNG, JPG, GIF. Maksimal 2MB.
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Personal Information Section -->
                 <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-2xl border border-blue-100 shadow-lg mb-8">

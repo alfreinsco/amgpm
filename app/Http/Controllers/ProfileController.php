@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -45,6 +46,7 @@ class ProfileController extends Controller
             'golongan_darah' => ['nullable', 'string', 'max:5'],
             'current_password' => ['nullable', 'required_with:password'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
         // Format the phone number
@@ -55,6 +57,18 @@ class ProfileController extends Controller
             if (!Hash::check($request->current_password, $user->password)) {
                 return back()->withErrors(['current_password' => 'Password saat ini tidak sesuai.']);
             }
+        }
+
+        // Handle profile photo upload
+        if ($request->hasFile('profile_photo')) {
+            // Delete old photo if exists
+            if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+                Storage::disk('public')->delete($user->profile_photo);
+            }
+
+            // Store new photo
+            $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+            $validated['profile_photo'] = $photoPath;
         }
 
         // Prepare update data
@@ -68,6 +82,11 @@ class ProfileController extends Controller
             'golongan_darah' => $validated['golongan_darah'],
         ];
 
+        // Add profile photo to update data if uploaded
+        if (isset($validated['profile_photo'])) {
+            $updateData['profile_photo'] = $validated['profile_photo'];
+        }
+
         // Add password to update data if provided
         if ($request->filled('password')) {
             $updateData['password'] = Hash::make($request->password);
@@ -77,5 +96,21 @@ class ProfileController extends Controller
         User::where('id', $user->id)->update($updateData);
 
         return redirect()->route('profile.show')->with('success', 'Profil berhasil diperbarui!');
+    }
+
+    /**
+     * Remove profile photo
+     */
+    public function removePhoto()
+    {
+        $user = Auth::user();
+
+        if ($user->profile_photo && Storage::disk('public')->exists($user->profile_photo)) {
+            Storage::disk('public')->delete($user->profile_photo);
+        }
+
+        User::where('id', $user->id)->update(['profile_photo' => null]);
+
+        return redirect()->route('profile.show')->with('success', 'Foto profil berhasil dihapus!');
     }
 }

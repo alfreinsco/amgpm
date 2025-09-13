@@ -65,9 +65,13 @@
                                     <span class="font-medium text-sm">{{ Auth::user()->nama }}</span>
                                     <span class="text-xs text-gray-500 opacity-80">{{ Auth::user()->is_admin ? 'Administrator' : 'Member' }}</span>
                                 </div>
-                                <div class="w-8 h-8 bg-gray-200/50 rounded-full flex items-center justify-center group-hover:bg-gray-300/50 transition-colors duration-300">
-                                    <i class="fas fa-user text-sm"></i>
-                                </div>
+                                @if(Auth::user()->profile_photo)
+                                    <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo" class="w-8 h-8 rounded-full object-cover group-hover:ring-2 group-hover:ring-gray-300 transition-all duration-300">
+                                @else
+                                    <div class="w-8 h-8 bg-gray-200/50 rounded-full flex items-center justify-center group-hover:bg-gray-300/50 transition-colors duration-300">
+                                        <i class="fas fa-user text-sm"></i>
+                                    </div>
+                                @endif
                                 <i class="fas fa-chevron-down text-xs opacity-70 group-hover:opacity-100 transition-opacity duration-300"></i>
                             </div>
                         </div>
@@ -75,9 +79,13 @@
                             <!-- User Info Header -->
                             <li class="mb-2">
                                 <a href="{{ route('profile.show') }}" class="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl cursor-pointer hover:bg-gradient-to-r hover:from-blue-100 hover:to-indigo-100">
-                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-user text-white text-sm"></i>
-                                    </div>
+                                    @if(Auth::user()->profile_photo)
+                                        <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profile Photo" class="w-10 h-10 rounded-full object-cover">
+                                    @else
+                                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-user text-white text-sm"></i>
+                                        </div>
+                                    @endif
                                     <div class="flex flex-col">
                                         <span class="font-semibold text-gray-800">{{ Auth::user()->nama }}</span>
                                         <span class="text-xs text-gray-500">{{ Auth::user()->is_admin ? 'Administrator' : 'Member' }}</span>

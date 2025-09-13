@@ -27,9 +27,15 @@
                     <div class="flex flex-col lg:flex-row items-center lg:items-start space-y-4 lg:space-y-0 lg:space-x-6">
                         <!-- Avatar -->
                         <div class="relative">
-                            <div class="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl ring-4 ring-white/50">
-                                {{ strtoupper(substr($user->nama ?? 'U', 0, 1)) }}
-                            </div>
+                            @if($user->profile_photo)
+                                <img src="{{ asset('storage/' . $user->profile_photo) }}" 
+                                     alt="Foto Profil {{ $user->nama }}" 
+                                     class="w-24 h-24 rounded-full object-cover shadow-xl ring-4 ring-white/50">
+                            @else
+                                <div class="w-24 h-24 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-xl ring-4 ring-white/50">
+                                    {{ strtoupper(substr($user->nama ?? 'U', 0, 1)) }}
+                                </div>
+                            @endif
                             @if($user->is_admin)
                                 <div class="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
                                     <i class="fas fa-crown text-white text-xs"></i>

@@ -26,6 +26,7 @@ class User extends Authenticatable
         'jenis_kelamin',
         'golongan_darah',
         'whatsapp',
+        'profile_photo',
     ];
 
     /**
