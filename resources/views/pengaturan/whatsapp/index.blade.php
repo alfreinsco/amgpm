@@ -95,7 +95,7 @@
                         <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                             <p class="text-sm text-blue-800">
                                 <i class="fas fa-info-circle mr-1"></i>
-                                <strong>Catatan:</strong> Gateway akan berjalan di <code class="bg-blue-100 px-1 rounded">http://localhost:5001</code>
+                                <strong>Catatan:</strong> Gateway akan berjalan di <code class="bg-blue-100 px-1 rounded">http://156.67.214.34:5001</code>
                             </p>
                         </div>
                     </div>
@@ -382,7 +382,7 @@
 <!-- JavaScript -->
 <script>
     // Base URL for wa-gateway API - ambil dari config
-    const WA_GATEWAY_URL = '{{ config("wa_gateway_url", "http://localhost:5001") }}';
+    const WA_GATEWAY_URL = '{{ config("wa_gateway_url", "http://156.67.214.34:5001") }}';
 
     // Check AMGPM session status
     async function checkAMGPMSessionStatus() {

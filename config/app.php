@@ -133,7 +133,7 @@ return [
     |
     */
 
-    'wa_gateway_url' => env('WA_GATEWAY_URL', 'http://localhost:5001'),
+    'wa_gateway_url' => env('WA_GATEWAY_URL', 'http://156.67.214.34:5001'),
 
     'wa_gateway_ttd' => env('WA_GATEWAY_TTD', '> Dikirim dari AMGPM'),
     'wa_gateway_footer' => env('WA_GATEWAY_FOOTER', '> Dikirim dari AMGPM'),

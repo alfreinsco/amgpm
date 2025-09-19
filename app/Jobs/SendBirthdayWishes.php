@@ -26,7 +26,7 @@ class SendBirthdayWishes implements ShouldQueue
     public function __construct(User $user)
     {
         $this->user = $user;
-        $this->gatewayUrl = config('app.wa_gateway_url', 'http://localhost:5001');
+        $this->gatewayUrl = config('app.wa_gateway_url', 'http://156.67.214.34:5001');
     }
 
     /**

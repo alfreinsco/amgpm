@@ -2,11 +2,11 @@
 
 Easy Setup Headless multi session Whatsapp Gateway with NodeJS
 
-- Support Multi device
-- Support Multi Session / Multi Phone Number
-- Send Text Message
-- Send Image
-- Send Document
+-   Support Multi device
+-   Support Multi Session / Multi Phone Number
+-   Send Text Message
+-   Send Image
+-   Send Document
 
 #### Read also [wa-multi-session](https://github.com/mimamch/wa-multi-session)
 
@@ -43,13 +43,13 @@ Easy Setup Headless multi session Whatsapp Gateway with NodeJS
 #### 5. Open On Browser & Start Scan QR
 
 ```
-http://localhost:5001/session/start?session=mysession
+http://156.67.214.34:5001/session/start?session=mysession
 ```
 
 #### 6. Sending first message
 
 ```
-http://localhost:5001/message/send-text?session=mysession&to=628123456789&text=Hello
+http://156.67.214.34:5001/message/send-text?session=mysession&to=628123456789&text=Hello
 ```
 
 ## API Reference
@@ -130,18 +130,18 @@ http://localhost:5001/message/send-text?session=mysession&to=628123456789&text=H
 
 ```js
 // send text
-axios.post("http://localhost:5001/message/send-text", {
-  session: "mysession",
-  to: "62812345678",
-  text: "hello world",
+axios.post("http://156.67.214.34:5001/message/send-text", {
+    session: "mysession",
+    to: "62812345678",
+    text: "hello world",
 });
 
 // send image
-axios.post("http://localhost:5001/message/send-image", {
-  session: "mysession",
-  to: "62812345678",
-  text: "hello world",
-  image_url: "https://placehold.co/600x400",
+axios.post("http://156.67.214.34:5001/message/send-image", {
+    session: "mysession",
+    to: "62812345678",
+    text: "hello world",
+    image_url: "https://placehold.co/600x400",
 });
 ```
 
@@ -199,7 +199,7 @@ You can get the media file by using the `media` object in the webhook message. T
 You can access media files using the following URL format:
 
 ```
-http://localhost:5001/media/3A5089C2F2652D46EBC5.jpg
+http://156.67.214.34:5001/media/3A5089C2F2652D46EBC5.jpg
 ```
 
 ## Upgrading
