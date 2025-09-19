@@ -103,7 +103,7 @@
                             </li>
                             @endif
                             <li>
-                                <a href="{{ route('dokumentasi.index') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200">
+                                <a href="{{ route('dokumentasi.aplikasi') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 transition-colors duration-200">
                                     <i class="fas fa-book text-indigo-600"></i>
                                     <span class="font-medium">Dokumentasi</span>
                                 </a>

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(class: [
             UserSeeder::class,
+            // DokumentasiSeeder::class,
         ]);
 
         // Generate 300 jadwal ibadah random

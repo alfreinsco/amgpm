@@ -8,6 +8,7 @@ use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\UlangTahunController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WhatsappController;
+use App\Http\Controllers\DokumentasiController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -85,8 +86,25 @@ Route::middleware('auth')->prefix('pengaturan')->group(function () {
     });
 });
 
-// Dokumentasi Route
-Route::get('/dokumentasi', function () {
-    return view('dokumentasi.index');
-})->name('dokumentasi.index');
+// Dokumentasi Aplikasi (static page)
+Route::get('/dokumentasi/aplikasi', function () {
+    return view('dokumentasi.app');
+})->name('dokumentasi.aplikasi');
+
+// Dokumentasi Routes
+Route::middleware(['auth'])->group(function () {
+    // Admin only routes
+    Route::middleware(['admin'])->group(function () {
+        Route::get('/dokumentasi/create', [DokumentasiController::class, 'create'])->name('dokumentasi.create');
+        Route::post('/dokumentasi', [DokumentasiController::class, 'store'])->name('dokumentasi.store');
+        Route::get('/dokumentasi/{dokumentasi}/edit', [DokumentasiController::class, 'edit'])->name('dokumentasi.edit');
+        Route::put('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'update'])->name('dokumentasi.update');
+        Route::delete('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'destroy'])->name('dokumentasi.destroy');
+        Route::delete('/dokumentasi/{dokumentasi}/photo', [DokumentasiController::class, 'removePhoto'])->name('dokumentasi.remove-photo');
+    });
+
+    // Public routes (authenticated users can view)
+    Route::get('/dokumentasi', [DokumentasiController::class, 'index'])->name('dokumentasi.index');
+    Route::get('/dokumentasi/{dokumentasi}', [DokumentasiController::class, 'show'])->name('dokumentasi.show');
+});
 
