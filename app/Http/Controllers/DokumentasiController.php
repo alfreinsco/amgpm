@@ -67,7 +67,7 @@ class DokumentasiController extends Controller
             'tanggal_kegiatan' => 'required|date',
             'lokasi' => 'nullable|string|max:255',
             'kategori' => 'required|string|in:umum,ibadah,sosial,pendidikan,kesehatan',
-            'foto_kegiatan.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'foto_kegiatan.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_published' => 'boolean'
         ]);
 
