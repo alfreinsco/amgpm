@@ -15,7 +15,7 @@ class DokumentasiController extends Controller
     public function index(Request $request)
     {
         $query = Dokumentasi::with('creator');
-        
+
         // Admin dapat melihat semua dokumentasi, user biasa hanya yang published
         if (!Auth::user()->is_admin) {
             $query->published();
