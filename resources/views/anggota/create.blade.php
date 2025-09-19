@@ -31,8 +31,34 @@
         </div>
 
         <div class="bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-white/20">
-            <form action="{{ route('anggota.store') }}" method="POST" class="space-y-8">
+            <form action="{{ route('anggota.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
+
+                <!-- Foto Profil -->
+                <div class="space-y-4">
+                    <label class="flex items-center text-sm font-semibold text-gray-700">
+                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg w-8 h-8 flex items-center justify-center mr-3">
+                            <i class="fas fa-camera text-white text-sm"></i>
+                        </div>
+                        Foto Profil
+                    </label>
+                    
+                    <!-- Upload Photo -->
+                    <div>
+                        <input type="file"
+                               id="profile_photo"
+                               name="profile_photo"
+                               accept="image/*"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 @error('profile_photo') border-red-500 focus:ring-red-500 @enderror">
+                        <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 2MB. (Opsional)</p>
+                        @error('profile_photo')
+                            <p class="text-red-500 text-sm mt-2 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+                </div>
 
                 <!-- Nama -->
                 <div class="space-y-2">

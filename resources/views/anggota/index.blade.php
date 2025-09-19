@@ -99,6 +99,7 @@
                     <table class="table table-zebra w-full">
                         <thead class="bg-blue-50">
                             <tr>
+                                <th class="text-left font-semibold text-gray-700">Foto</th>
                                 <th class="text-left font-semibold text-gray-700">Nama</th>
                                 <th class="text-left font-semibold text-gray-700">Email</th>
                                 <th class="text-left font-semibold text-gray-700">WhatsApp</th>
@@ -112,6 +113,17 @@
                         <tbody>
                             @foreach($anggota as $item)
                                 <tr class="hover:bg-gray-50">
+                                    <td>
+                                        @if($item->profile_photo)
+                                            <img src="{{ asset('storage/' . $item->profile_photo) }}" 
+                                                 alt="Foto {{ $item->nama }}" 
+                                                 class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
+                                        @else
+                                            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                                                {{ strtoupper(substr($item->nama, 0, 1)) }}
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td class="font-medium text-gray-900">{{ $item->nama }}</td>
                                     <td class="text-gray-600">{{ $item->email ?? '-' }}</td>
                                     <td class="text-gray-600">{{ $item->whatsapp ?? '-' }}</td>

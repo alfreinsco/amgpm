@@ -27,11 +27,17 @@
         @endif
 
         <div class="bg-white p-8 rounded-lg shadow-xl border border-gray-100">
-            <!-- Header Profile -->
-            <div class="flex items-center mb-8 pb-6 border-b border-gray-200">
-                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-6">
-                    {{ strtoupper(substr($anggotum->nama, 0, 1)) }}
-                </div>
+            <!-- Header with Profile Info -->
+            <div class="flex items-center mb-8">
+                @if($anggotum->profile_photo)
+                    <img src="{{ asset('storage/' . $anggotum->profile_photo) }}" 
+                         alt="Foto Profil {{ $anggotum->nama }}" 
+                         class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg mr-6">
+                @else
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-6">
+                        {{ strtoupper(substr($anggotum->nama, 0, 1)) }}
+                    </div>
+                @endif
                 <div>
                     <h2 class="text-2xl font-bold text-gray-900">{{ $anggotum->nama }}</h2>
                     <div class="flex items-center mt-2">

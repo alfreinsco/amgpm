@@ -31,9 +31,60 @@
         </div>
 
         <div class="bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-white/20">
-            <form action="{{ route('anggota.update', $anggotum) }}" method="POST" class="space-y-8">
+            <form action="{{ route('anggota.update', $anggotum) }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
                 @method('PUT')
+
+                <!-- Foto Profil -->
+                <div class="space-y-4">
+                    <label class="flex items-center text-sm font-semibold text-gray-700">
+                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg w-8 h-8 flex items-center justify-center mr-3">
+                            <i class="fas fa-camera text-white text-sm"></i>
+                        </div>
+                        Foto Profil
+                    </label>
+
+                    <!-- Current Photo Display -->
+                    @if($anggotum->profile_photo)
+                        <div class="flex items-center space-x-4">
+                            <img src="{{ asset('storage/' . $anggotum->profile_photo) }}"
+                                 alt="Foto Profil"
+                                 class="w-20 h-20 rounded-full object-cover border-4 border-gray-200">
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-600 mb-2">Foto profil saat ini</p>
+                                <a href="#" 
+                                   onclick="hapusFoto({{ $anggotum->id }}); return false;"
+                                   class="inline-block px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 text-sm rounded-lg transition-colors duration-200">
+                                    <i class="fas fa-trash mr-1"></i>
+                                    Hapus Foto
+                                </a>
+                            </div>
+                        </div>
+                    @else
+                        <div class="flex items-center space-x-4">
+                            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                                {{ strtoupper(substr($anggotum->nama, 0, 1)) }}
+                            </div>
+                            <p class="text-sm text-gray-500">Belum ada foto profil</p>
+                        </div>
+                    @endif
+
+                    <!-- Upload New Photo -->
+                    <div>
+                        <input type="file"
+                               id="profile_photo"
+                               name="profile_photo"
+                               accept="image/*"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 @error('profile_photo') border-red-500 focus:ring-red-500 @enderror">
+                        <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 2MB.</p>
+                        @error('profile_photo')
+                            <p class="text-red-500 text-sm mt-2 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+                </div>
 
                 <!-- Nama -->
                 <div class="space-y-2">
@@ -245,4 +296,33 @@
         </div>
     </div>
 </div>
+
+<script>
+function hapusFoto(anggotaId) {
+    if (confirm('Apakah Anda yakin ingin menghapus foto profil?')) {
+        // Create a form dynamically to submit DELETE request
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/anggota/${anggotaId}/photo`;
+        
+        // Add CSRF token
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+        form.appendChild(csrfToken);
+        
+        // Add method spoofing for DELETE
+        const methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'DELETE';
+        form.appendChild(methodInput);
+        
+        // Append form to body and submit
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
 @endsection

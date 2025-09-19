@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('anggota', AnggotaController::class);
     Route::patch('/anggota/{anggotum}/reset-password', [AnggotaController::class, 'resetPassword'])->name('anggota.reset-password');
+    Route::delete('/anggota/{anggotum}/photo', [AnggotaController::class, 'removePhoto'])->name('anggota.photo.remove');
 });
 
 // Ulang Tahun Routes (Authenticated Users)

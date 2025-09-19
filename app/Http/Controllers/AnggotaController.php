@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
@@ -64,7 +65,8 @@ class AnggotaController extends Controller
             'jenis_kelamin' => 'required|in:L,P',
             'golongan_darah' => 'required|in:A,B,AB,O',
             'whatsapp' => 'required|string|unique:users,whatsapp',
-            'is_admin' => 'boolean'
+            'is_admin' => 'boolean',
+            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
         // Format the phone number
@@ -76,6 +78,14 @@ class AnggotaController extends Controller
         $validated['password'] = Hash::make($defaultPassword);
 
         $validated['is_admin'] = $request->has('is_admin');
+
+        // Handle profile photo upload
+        if ($request->hasFile('profile_photo')) {
+            $file = $request->file('profile_photo');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('profile_photos', $filename, 'public');
+            $validated['profile_photo'] = $path;
+        }
 
         $anggotum = User::create($validated);
 
@@ -112,13 +122,26 @@ class AnggotaController extends Controller
             'jenis_kelamin' => 'required|in:L,P',
             'golongan_darah' => 'required|in:A,B,AB,O',
             'whatsapp' => ['required', 'string', Rule::unique('users')->ignore($anggotum->id)],
-            'is_admin' => 'boolean'
+            'is_admin' => 'boolean',
+            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
         // Format the phone number
         $validated['whatsapp'] = formatPhoneNumber($validated['whatsapp']);
 
         $validated['is_admin'] = $request->has('is_admin');
+
+        // Handle profile photo upload
+        if ($request->hasFile('profile_photo')) {
+            // Delete old photo if exists
+            if ($anggotum->profile_photo && Storage::disk('public')->exists($anggotum->profile_photo)) {
+                Storage::disk('public')->delete($anggotum->profile_photo);
+            }
+
+            // Store new photo
+            $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
+            $validated['profile_photo'] = $photoPath;
+        }
 
         $anggotum->update($validated);
 
@@ -149,10 +172,29 @@ class AnggotaController extends Controller
     }
 
     /**
+     * Remove profile photo from anggota
+     */
+    public function removePhoto(User $anggotum)
+    {
+        if ($anggotum->profile_photo && Storage::disk('public')->exists($anggotum->profile_photo)) {
+            Storage::disk('public')->delete($anggotum->profile_photo);
+        }
+
+        $anggotum->update(['profile_photo' => null]);
+
+        return redirect()->back()->with('success', 'Foto profil berhasil dihapus.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(User $anggotum)
     {
+        // Delete profile photo if exists
+        if ($anggotum->profile_photo && Storage::disk('public')->exists($anggotum->profile_photo)) {
+            Storage::disk('public')->delete($anggotum->profile_photo);
+        }
+
         $anggotum->delete();
 
         return redirect()->route('anggota.index')
